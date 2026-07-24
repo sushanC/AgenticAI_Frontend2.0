@@ -187,7 +187,7 @@ export default function Home() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
             >
-              {page === 'dashboard' && <DashboardPage />}
+              {page === 'dashboard' && <DashboardPage setPage={setPage} onQuickAction={handleQuickAction} />}
               {page === 'notes'     && <NotesPage />}
               {page === 'tasks'     && <TasksPage />}
               {page === 'memory'    && <MemoryPage />}
