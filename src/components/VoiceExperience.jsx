@@ -1,23 +1,31 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
-import { useDesktopBridge } from "../desktop/useDesktopBridge";
-import "./VoiceExperience.css";
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useDesktopBridge } from '../desktop/useDesktopBridge';
 
-const API = "http://localhost:3001";
+// Modular Voice Experience Subcomponents
+import VoiceHeader from './voice/VoiceHeader';
+import VoiceOrb from './voice/VoiceOrb';
+import VoiceStatus from './voice/VoiceStatus';
+import VoiceWaveform from './voice/VoiceWaveform';
+import VoiceConversation from './voice/VoiceConversation';
+import VoiceControls from './voice/VoiceControls';
+import VoiceSessionInfo from './voice/VoiceSessionInfo';
+
+import './VoiceExperience.css';
+
+const API = 'http://localhost:3001';
 
 export default function VoiceExperience({ onClose }) {
   const { isElectron, desktopAPI } = useDesktopBridge();
-  const [status, setStatus] = useState("idle");
+  const [status, setStatus] = useState('idle');
   const [isPaused, setIsPaused] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [settings, setSettings] = useState(null);
   const [devices, setDevices] = useState({ inputs: [], outputs: [] });
   const [transcript, setTranscript] = useState([]);
-  const [modelName, setModelName] = useState("Auto");
-  
-  const transcriptEndRef = useRef(null);
+  const [modelName, setModelName] = useState('Auto');
 
   // ── Load Settings & Devices ──────────────────────────────────────────────
   const loadData = useCallback(async () => {
@@ -32,7 +40,7 @@ export default function VoiceExperience({ onClose }) {
         setModelName(settingsRes.data.model);
       }
     } catch (err) {
-      console.error("[VoiceExperience] Failed to load initial data:", err);
+      console.error('[VoiceExperience] Failed to load initial data:', err);
     }
   }, []);
 
@@ -40,10 +48,17 @@ export default function VoiceExperience({ onClose }) {
     loadData();
   }, [loadData]);
 
-  // ── Auto-scroll Transcript ───────────────────────────────────────────────
+  // ── Keyboard Listener (Esc exit, Space bar start/stop) ───────────────────
   useEffect(() => {
-    transcriptEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [transcript]);
+    const handleKeyDown = e => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // ── Save Setting Helper ──────────────────────────────────────────────────
   const updateSetting = async (key, value) => {
@@ -53,23 +68,25 @@ export default function VoiceExperience({ onClose }) {
 
     try {
       await axios.post(`${API}/settings`, { [key]: value });
-      desktopAPI.voiceSettingsChanged(); // Notify backend to reload
+      if (desktopAPI && desktopAPI.voiceSettingsChanged) {
+        desktopAPI.voiceSettingsChanged();
+      }
     } catch (err) {
-      console.error("[VoiceExperience] Failed to save setting:", err);
-      toast.error("Failed to save preference");
+      console.error('[VoiceExperience] Failed to save setting:', err);
+      toast.error('Failed to save preference');
     }
   };
 
-  // ── Toggle Mute (Stops active playback) ──────────────────────────────────
+  // ── Toggle Mute ──────────────────────────────────────────────────────────
   const toggleMute = () => {
     if (isMuted) {
       desktopAPI.resumeSpeaking();
       setIsMuted(false);
-      toast.success("Voice feedback unmuted");
+      toast.success('Voice feedback unmuted');
     } else {
       desktopAPI.stopSpeaking();
       setIsMuted(true);
-      toast.success("Voice feedback muted");
+      toast.success('Voice feedback muted');
     }
   };
 
@@ -86,11 +103,11 @@ export default function VoiceExperience({ onClose }) {
 
   // ── Mic Button Action based on State ─────────────────────────────────────
   const handleMicClick = () => {
-    if (status === "idle" || status === "error") {
+    if (status === 'idle' || status === 'error') {
       desktopAPI.startListening();
-    } else if (status === "listening") {
+    } else if (status === 'listening') {
       desktopAPI.cancelListening();
-    } else if (status === "speaking") {
+    } else if (status === 'speaking') {
       desktopAPI.stopSpeaking();
     }
   };
@@ -99,29 +116,27 @@ export default function VoiceExperience({ onClose }) {
   useEffect(() => {
     if (!isElectron) return;
 
-    const unsubState = desktopAPI.onVoiceStateChange((payload) => {
+    const unsubState = desktopAPI.onVoiceStateChange(payload => {
       const { state, text, reply } = payload;
       setStatus(state);
 
-      if (state === "speaking") {
+      if (state === 'speaking') {
         setIsPaused(false);
       }
 
-      // Append recognized user speech to transcript
       if (text) {
-        setTranscript((prev) => [...prev, { role: "user", text }]);
+        setTranscript(prev => [...prev, { role: 'user', text }]);
       }
-      
-      // Append Jarvis response to transcript
+
       if (reply) {
-        setTranscript((prev) => [...prev, { role: "jarvis", text: reply }]);
+        setTranscript(prev => [...prev, { role: 'jarvis', text: reply }]);
       }
     });
 
     const unsubCommand = desktopAPI.onVoiceCommand(({ action }) => {
-      if (action === "mute") {
+      if (action === 'mute') {
         setIsMuted(true);
-      } else if (action === "unmute") {
+      } else if (action === 'unmute') {
         setIsMuted(false);
       }
     });
@@ -139,152 +154,58 @@ export default function VoiceExperience({ onClose }) {
     onClose();
   };
 
-  const activeMic = devices.inputs.find(d => d.id === settings?.microphoneSelection)?.name || "Default Microphone";
-  const activeSpeaker = devices.outputs.find(d => d.id === settings?.speakerSelection)?.name || "Default Speaker";
+  const activeMic =
+    devices.inputs.find(d => d.id === settings?.microphoneSelection)?.name ||
+    'Default Microphone';
+  const activeSpeaker =
+    devices.outputs.find(d => d.id === settings?.speakerSelection)?.name ||
+    'Default Speaker';
 
   return (
     <div className="voice-experience-overlay">
-      <div className="voice-exp-particles" />
+      <div className="voice-exp-backdrop-blur" />
 
-      {/* Header */}
-      <div className="voice-exp-header">
-        <div className="voice-exp-logo-group">
-          <span className="voice-exp-logo">✦</span>
-          <span className="voice-exp-title">Jarvis Voice Experience</span>
-        </div>
-        <button className="voice-exp-close-btn" onClick={handleClose} title="Exit Voice Mode">
-          ✕
-        </button>
-      </div>
+      <div className="voice-exp-window-container">
+        {/* Top Header */}
+        <VoiceHeader onClose={handleClose} />
 
-      {/* Center Animated Orb Area */}
-      <div className="voice-exp-main">
-        <div className="voice-orb-container">
-          <div className={`voice-orb-glow ${status}`} />
-          <motion.div 
-            className={`voice-orb ${status}`}
-            onClick={handleMicClick}
-            whileTap={{ scale: 0.95 }}
-            title="Click to interact"
+        {/* Center Main Stage */}
+        <div className="voice-exp-main-stage">
+          {/* Animated Voice Orb */}
+          <VoiceOrb status={status} onClick={handleMicClick} />
+
+          {/* Status Display */}
+          <VoiceStatus status={status} />
+
+          {/* Fluid Waveform */}
+          <VoiceWaveform status={status} />
+
+          {/* Conversation Bubbles */}
+          <VoiceConversation transcript={transcript} />
+
+          {/* Contextual Controls */}
+          <VoiceControls
+            status={status}
+            isPaused={isPaused}
+            isMuted={isMuted}
+            settings={settings}
+            onMicClick={handleMicClick}
+            onPauseResume={handlePauseResume}
+            onToggleMute={toggleMute}
+            onCancelListening={() => desktopAPI.cancelListening()}
+            onStopSpeaking={() => desktopAPI.stopSpeaking()}
+            onToggleContinuous={val => updateSetting('conversationMode', val)}
           />
         </div>
 
-        {/* Status indicator */}
-        <div className="voice-exp-status-block">
-          <span className="voice-exp-status-title">
-            {status === "idle" && "Jarvis Idle"}
-            {status === "listening" && "Listening..."}
-            {status === "processing" && "Thinking..."}
-            {status === "speaking" && "Speaking..."}
-            {status === "error" && "Subsystem Error"}
-          </span>
-          <span className="voice-exp-status-subtitle">
-            {status === "idle" && "Tap the orb to start speaking"}
-            {status === "listening" && "Jarvis is listening; speak now"}
-            {status === "processing" && "Analyzing with Context Intelligence Engine..."}
-            {status === "speaking" && "Synthesizing vocal response..."}
-            {status === "error" && "Recovering voice modules automatically..."}
-          </span>
-        </div>
-
-        {/* Waveform Visualization */}
-        <div className="voice-exp-waveform">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <div 
-              key={i} 
-              className={`voice-exp-wave-bar ${status === "speaking" ? "speaking" : ""}`} 
-            />
-          ))}
-        </div>
-
-        {/* Transcript Box */}
-        <div className="voice-exp-transcript-container">
-          {transcript.length === 0 ? (
-            <div style={{ color: "#475569", textAlign: "center", fontStyle: "italic", marginTop: 32 }}>
-              Conversation transcript will appear here...
-            </div>
-          ) : (
-            transcript.map((msg, index) => (
-              <div key={index} className="voice-transcript-row">
-                <span className={`voice-transcript-speaker voice-transcript-${msg.role}`}>
-                  {msg.role === "user" ? "You:" : "Jarvis:"}
-                </span>
-                <span className="voice-transcript-text">{msg.text}</span>
-              </div>
-            ))
-          )}
-          <div ref={transcriptEndRef} />
-        </div>
-
-        {/* Controls HUD */}
-        <div className="voice-exp-controls">
-          {status === "speaking" && (
-            <button className="voice-exp-btn" onClick={handlePauseResume}>
-              {isPaused ? "▶️ Resume" : "⏸️ Pause"}
-            </button>
-          )}
-
-          <button 
-            className={`voice-exp-btn ${isMuted ? "danger" : ""}`}
-            onClick={toggleMute}
-          >
-            {isMuted ? "🔇 Unmute" : "🔊 Mute"}
-          </button>
-
-          {status === "speaking" && (
-            <button className="voice-exp-btn danger" onClick={() => desktopAPI.stopSpeaking()}>
-              ⏹️ Stop
-            </button>
-          )}
-
-          {status === "listening" && (
-            <button className="voice-exp-btn danger" onClick={() => desktopAPI.cancelListening()}>
-              ✕ Cancel
-            </button>
-          )}
-
-          {settings && (
-            <button 
-              className={`voice-exp-btn ${settings.conversationMode ? "active" : ""}`}
-              onClick={() => updateSetting("conversationMode", !settings.conversationMode)}
-            >
-              💬 Continuous
-            </button>
-          )}
-
-          {(status === "idle" || status === "error") && (
-            <button className="voice-exp-btn" onClick={() => desktopAPI.startListening()}>
-              🔄 Retry
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Footer Meta Dashboard */}
-      <div className="voice-exp-footer">
-        <div className="voice-exp-meta-group">
-          <div className="voice-exp-meta-item">
-            <span className="voice-exp-meta-label">Model:</span>
-            <span className="voice-exp-meta-value">{modelName}</span>
-          </div>
-          <div className="voice-exp-meta-item">
-            <span className="voice-exp-meta-label">Mic:</span>
-            <span className="voice-exp-meta-value">{activeMic}</span>
-          </div>
-          <div className="voice-exp-meta-item">
-            <span className="voice-exp-meta-label">Speaker:</span>
-            <span className="voice-exp-meta-value">{activeSpeaker}</span>
-          </div>
-          <div className="voice-exp-meta-item">
-            <span className="voice-exp-meta-label">Language:</span>
-            <span className="voice-exp-meta-value">{settings?.language || "en"}</span>
-          </div>
-        </div>
-
-        <div className="voice-exp-status-indicator">
-          <div className={`voice-status-led ${status === "error" ? "offline" : ""}`} />
-          <span>Jarvis Server Online</span>
-        </div>
+        {/* Footer Collapsible Session Info Drawer */}
+        <VoiceSessionInfo
+          modelName={modelName}
+          settings={settings}
+          activeMic={activeMic}
+          activeSpeaker={activeSpeaker}
+          status={status}
+        />
       </div>
     </div>
   );
