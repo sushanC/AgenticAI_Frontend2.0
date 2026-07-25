@@ -26,6 +26,8 @@ import { useChat } from '../hooks/useChat';
 import { useTasks } from '../hooks/useTasks';
 import { useMemory } from '../hooks/useMemory';
 
+import { initDefaultCommands } from '../registry/commandRegistry';
+
 export default function Home() {
   const [page, setPage] = useState('chat');
   const [quickActionPrompt, setQuickActionPrompt] = useState('');
@@ -125,6 +127,28 @@ export default function Home() {
       unsubVoiceCommand();
     };
   }, [isElectron, desktopAPI, handleNewChat]);
+
+  // ── Command Registry Initialization ────────────────────────────────────────
+  useEffect(() => {
+    initDefaultCommands({
+      setPage,
+      handleNewChat,
+      setVoiceOpen: setVoiceExperienceOpen,
+      setDevOpen: setDevConsoleOpen,
+    });
+  }, [handleNewChat]);
+
+  // ── Global Ctrl+K Shortcut Listener ───────────────────────────────────────
+  useEffect(() => {
+    const handleGlobalKeyDown = e => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   // ── ESC: exit PDF Workspace ───────────────────────────────────────────────
   useEffect(() => {
