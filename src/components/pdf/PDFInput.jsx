@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowUp } from 'lucide-react';
 
 export default function PDFInput({ onSend, isAsking, placeholder }) {
   const [text, setText] = useState('');
@@ -11,7 +13,7 @@ export default function PDFInput({ onSend, isAsking, placeholder }) {
     }
   }, [text]);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = e => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
@@ -32,25 +34,25 @@ export default function PDFInput({ onSend, isAsking, placeholder }) {
           ref={textareaRef}
           rows={1}
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={e => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder || "Ask a question about this document..."}
+          placeholder={placeholder || 'Ask anything about this document...'}
           disabled={isAsking}
         />
-        <button 
-          className="pdf-send-btn" 
-          onClick={handleSubmit} 
+        <motion.button
+          type="button"
+          className="pdf-send-btn"
+          onClick={handleSubmit}
           disabled={!text.trim() || isAsking}
+          whileHover={text.trim() && !isAsking ? { scale: 1.05 } : {}}
+          whileTap={text.trim() && !isAsking ? { scale: 0.95 } : {}}
         >
           {isAsking ? (
-            <span className="pdf-spinner"></span>
+            <span className="pdf-spinner" />
           ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
+            <ArrowUp size={18} />
           )}
-        </button>
+        </motion.button>
       </div>
       <div className="pdf-input-footer">
         <span>Press Enter to send, Shift + Enter for new line</span>
