@@ -815,30 +815,568 @@ img, svg { display: block; }
 .card-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
 .card-btn.danger:hover { color: var(--error); }
 
-/* ── Memory ─────────────────── */
-.memory-item {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 14px 0; border-bottom: 1px solid var(--border-light);
+/* ═══════════════════════════════════════════════════════════════════════════
+   Memory Center Module — AI Brain Interface
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.memory-center-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--bg-window);
+  color: var(--text-primary);
 }
-.memory-item:last-child { border-bottom: none; }
-.memory-icon {
-  width: 28px; height: 28px; border-radius: var(--radius-md);
-  background: var(--bg-secondary); display: flex;
-  align-items: center; justify-content: center; font-size: 14px;
+
+.memory-center-content {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 36px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Hero Section */
+.memory-hero-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.memory-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.memory-brain-icon {
+  color: var(--text-primary);
+}
+
+.memory-hero-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.4px;
+}
+
+.memory-hero-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.memory-hero-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 640px;
+}
+
+/* Stats Cards Grid */
+.memory-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  width: 100%;
+}
+
+.memory-stat-card {
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+
+.memory-stat-card:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--divider);
+}
+
+.stat-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.stat-icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.stat-icon-box.success {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: var(--success);
+}
+
+.stat-card-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-card-value.success {
+  font-size: 16px;
+  color: var(--success);
+}
+
+.health-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+
+.stat-card-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Controls Section (Search + Filter Pills) */
+.memory-controls-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.memory-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.memory-search-bar:focus-within {
+  border-color: var(--divider);
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+.memory-search-icon {
+  color: var(--text-muted);
   flex-shrink: 0;
 }
-.memory-text { flex: 1; font-size: 14px; color: var(--text-primary); line-height: 1.5; }
-.memory-meta {
-  font-size: 12px; color: var(--text-muted); margin-top: 3px;
-  display: flex; align-items: center; gap: 8px;
+
+.memory-search-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 14px;
 }
-.memory-tag {
-  display: inline-block; padding: 1px 8px; background: var(--bg-secondary);
-  border: 1px solid var(--border); border-radius: var(--radius-full);
-  font-size: 11px; color: var(--text-muted);
+
+.memory-search-bar input::placeholder {
+  color: var(--text-muted);
 }
-.memory-actions { display: flex; gap: 4px; flex-shrink: 0; opacity: 0; transition: opacity 120ms; }
-.memory-item:hover .memory-actions { opacity: 1; }
+
+.memory-search-clear {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Segmented Control Filter Pills */
+.memory-segmented-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  overflow-x: auto;
+}
+
+.memory-segment-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.memory-segment-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.memory-segment-btn.active {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.segment-count {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+}
+
+.memory-segment-btn.active .segment-count {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+/* Grouped Memory Categories */
+.memory-grouped-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.memory-category-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.memory-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.group-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.group-header-icon {
+  color: var(--text-secondary);
+}
+
+.group-header-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.memory-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Memory Card */
+.memory-card {
+  position: relative;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.memory-card:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--divider);
+}
+
+.memory-card.pinned {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--bg-tertiary);
+}
+
+.memory-card-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.memory-card-icon-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.memory-card-main-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.memory-card-text {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+.memory-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.memory-tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.memory-date-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.memory-pinned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Hover 3-Dot Options Menu */
+.memory-card-options-wrapper {
+  position: relative;
+}
+
+.memory-options-trigger {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.memory-card:hover .memory-options-trigger,
+.memory-options-trigger:focus {
+  opacity: 1;
+}
+
+.memory-options-trigger:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.memory-options-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  width: 150px;
+  z-index: 100;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.memory-option-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+}
+
+.memory-option-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.memory-option-item.danger:hover {
+  color: var(--error);
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* Inline Edit Box */
+.memory-inline-edit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.memory-inline-edit-box textarea {
+  width: 100%;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+}
+
+.memory-inline-edit-box textarea:focus {
+  border-color: var(--divider);
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+.memory-edit-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Skeleton Loading */
+.memory-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.memory-skeleton-card {
+  height: 72px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  animation: pulse-skele 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-skele {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* Empty State Container */
+.memory-empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  gap: 14px;
+}
+
+.memory-empty-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.memory-empty-container h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.memory-empty-container p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 440px;
+  line-height: 1.55;
+}
 
 
 /* ── Empty state ───────────── */
