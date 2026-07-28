@@ -12,6 +12,7 @@ import TasksPage from '../components/pages/TasksPage';
 import NotesPage from '../components/pages/NotesPage';
 import PDFPage from '../components/pages/PDFPage';
 import SettingsPage from '../components/pages/SettingsPage';
+import WorkspacePage from '../components/pages/WorkspacePage';
 
 // Desktop layer (gracefully no-ops outside Electron)
 import CommandPalette from '../desktop/CommandPalette';
@@ -212,6 +213,13 @@ export default function Home() {
               transition={{ duration: 0.15 }}
             >
               {page === 'dashboard' && <DashboardPage setPage={setPage} onQuickAction={handleQuickAction} />}
+              {page === 'workspace' && (
+                <WorkspacePage
+                  setPage={setPage}
+                  setVoiceOpen={setVoiceExperienceOpen}
+                  setDevOpen={setDevConsoleOpen}
+                />
+              )}
               {page === 'notes'     && <NotesPage />}
               {page === 'tasks'     && <TasksPage />}
               {page === 'memory'    && <MemoryPage />}
