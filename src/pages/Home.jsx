@@ -47,12 +47,6 @@ export default function Home() {
 
   // ── Quick actions ─────────────────────────────────────────────────────────
   const handleQuickAction = useCallback((prompt) => {
-    setQuickActionPrompt(prompt);
-    setPage('chat');
-  }, []);
-
-  const handleNewChat = useCallback(() => {
-    clearMessages();
     setQuickActionPrompt('');
   }, [clearMessages]);
 

@@ -52,8 +52,22 @@ export function useChat() {
    *
    *   Otherwise routes normally to POST /chat/stream.
    */
-  async function sendMessage(text) {
-    if (!text.trim() || isStreaming) return;
+  async function sendMessage(inputPayload) {
+    let text = '';
+    let attachments = [];
+    let metadata = {};
+    let preferredCapability = null;
+
+    if (typeof inputPayload === 'string') {
+      text = inputPayload;
+    } else if (inputPayload && typeof inputPayload === 'object') {
+      text = inputPayload.text || '';
+      attachments = inputPayload.attachments || [];
+      metadata = inputPayload.metadata || {};
+      preferredCapability = inputPayload.preferredCapability || inputPayload.selectedModel || null;
+    }
+
+    if ((!text.trim() && attachments.length === 0) || isStreaming) return;
 
     // ── Phase 5: Waiting Input Routing ─────────────────────────────────────
     if (activeWaitingInput) {
@@ -67,7 +81,7 @@ export function useChat() {
 
     setMessages(prev => [
       ...prev,
-      { role: 'user', content: text, timestamp: new Date() },
+      { role: 'user', content: text, attachments, metadata, timestamp: new Date() },
       { id: assistantId, role: 'assistant', content: '', timestamp: new Date(), streaming: true },
     ]);
 
@@ -87,7 +101,7 @@ export function useChat() {
       const response = await fetch('http://localhost:3001/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, attachments, capability: preferredCapability }),
       });
 
       const reader = response.body.getReader();
