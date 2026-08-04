@@ -71,7 +71,6 @@ export default function Home() {
     }
   }, [sendMessage]);
 
-  // ── Desktop IPC event subscriptions ──────────────────────────────────────
   useEffect(() => {
     if (!isElectron) return;
 
@@ -133,7 +132,6 @@ export default function Home() {
     });
   }, [handleNewChat]);
 
-  // ── Global Ctrl+K Shortcut Listener ───────────────────────────────────────
   useEffect(() => {
     const handleGlobalKeyDown = e => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -145,7 +143,6 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
-  // ── ESC: exit PDF Workspace ───────────────────────────────────────────────
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && page === 'pdfs') {
