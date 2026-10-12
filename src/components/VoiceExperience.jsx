@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useDesktopBridge } from '../desktop/useDesktopBridge';
 
 // Modular Voice Experience Subcomponents
@@ -28,25 +27,31 @@ export default function VoiceExperience({ onClose }) {
   const [modelName, setModelName] = useState('Auto');
 
   // ── Load Settings & Devices ──────────────────────────────────────────────
-  const loadData = useCallback(async () => {
-    try {
-      const [settingsRes, devicesRes] = await Promise.all([
-        axios.get(`${API}/settings`),
-        axios.get(`${API}/audio/devices`),
-      ]);
-      setSettings(settingsRes.data);
-      setDevices(devicesRes.data);
-      if (settingsRes.data?.model) {
-        setModelName(settingsRes.data.model);
-      }
-    } catch (err) {
-      console.error('[VoiceExperience] Failed to load initial data:', err);
-    }
+  useEffect(() => {
+    let isCurrent = true;
+
+    Promise.all([
+      axios.get(`${API}/settings`),
+      axios.get(`${API}/audio/devices`),
+    ])
+      .then(([settingsRes, devicesRes]) => {
+        if (!isCurrent) return;
+        setSettings(settingsRes.data);
+        setDevices(devicesRes.data);
+        if (settingsRes.data?.model) setModelName(settingsRes.data.model);
+      })
+      .catch(err => console.error('[VoiceExperience] Failed to load initial data:', err));
+
+    return () => { isCurrent = false; };
   }, []);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  // Clean exit: deactivates the existing voice session before closing the overlay.
+  // Keep this callback stable because it is also used by the keyboard listener.
+  const handleClose = useCallback(() => {
+    desktopAPI.stopSpeaking();
+    desktopAPI.cancelListening();
+    onClose();
+  }, [desktopAPI, onClose]);
 
   // ── Keyboard Listener (Esc exit, Space bar start/stop) ───────────────────
   useEffect(() => {
@@ -58,7 +63,7 @@ export default function VoiceExperience({ onClose }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [handleClose]);
 
   // ── Save Setting Helper ──────────────────────────────────────────────────
   const updateSetting = async (key, value) => {
@@ -147,13 +152,6 @@ export default function VoiceExperience({ onClose }) {
     };
   }, [isElectron, desktopAPI]);
 
-  // Clean exit: deactivates voice session on backend and calls parent onClose
-  const handleClose = () => {
-    desktopAPI.stopSpeaking();
-    desktopAPI.cancelListening();
-    onClose();
-  };
-
   const activeMic =
     devices.inputs.find(d => d.id === settings?.microphoneSelection)?.name ||
     'Default Microphone';
@@ -164,6 +162,10 @@ export default function VoiceExperience({ onClose }) {
   return (
     <div className="voice-experience-overlay">
       <div className="voice-exp-backdrop-blur" />
+
+      {/* Spatial ambient environment lights */}
+      <div className="voice-env-ambient-left" aria-hidden="true" />
+      <div className="voice-env-ambient-right" aria-hidden="true" />
 
       <div className="voice-exp-window-container">
         {/* Top Header */}

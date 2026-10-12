@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Search, Code, FileText, CheckSquare, Sparkles } from 'lucide-react';
+import './WelcomeScreen.css';
 
 const ACTIONS = [
   {
@@ -91,5 +92,4 @@ export default function WelcomeScreen({ onAction }) {
     </div>
   );
 }
-
 

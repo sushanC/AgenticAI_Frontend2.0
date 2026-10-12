@@ -1,0 +1,219 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 6 — WELCOME SCREEN
+   ───────────────────────────────────────────────────────────────────────────── */
+.welcome-screen {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 48px 24px;
+  max-width: clamp(600px, 76vw, 820px);
+  margin: 0 auto; width: 100%;
+}
+.welcome-container {
+  width: 100%; display: flex; flex-direction: column; align-items: center;
+}
+
+.welcome-logo-wrapper {
+  position: relative; margin-bottom: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
+/* Ambient glow ring — visible diffuse light behind the logo orb */
+.welcome-logo-wrapper::before {
+  content: '';
+  position: absolute; width: 140px; height: 140px; border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255,255,255,0.072) 0%,
+    transparent 68%
+  );
+  filter: blur(18px); pointer-events: none;
+}
+
+/* The glass orb — Level 4: strongest glass */
+.welcome-logo {
+  position: relative;
+  width: 66px; height: 66px; border-radius: 22px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--t-hi);
+
+  background: linear-gradient(145deg,
+    rgba(255,255,255,0.130) 0%,
+    rgba(255,255,255,0.068) 50%,
+    rgba(255,255,255,0.040) 100%
+  );
+  border: 1px solid var(--g-border-3);
+  backdrop-filter: blur(var(--blur-lg)) var(--sat-xl);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) var(--sat-xl);
+  box-shadow:
+    inset 0 1px 0 var(--g-spec-strong),
+    inset 1px 0 0 var(--g-spec-left),
+    inset 0 -1px 0 var(--g-spec-bottom),
+    0 18px 56px rgba(0,0,0,0.55),
+    0 3px 12px rgba(0,0,0,0.30);
+}
+/* Corner specular reflection on the logo orb */
+.welcome-logo::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 22px;
+  background: linear-gradient(130deg,
+    rgba(255,255,255,0.115) 0%,
+    rgba(255,255,255,0.035) 30%,
+    transparent 52%
+  );
+  pointer-events: none;
+}
+
+.welcome-greeting {
+  font-size: 34px; font-weight: 600; color: var(--t-hi);
+  text-align: center; margin-bottom: 10px;
+  letter-spacing: -0.6px; line-height: 1.2;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+}
+.welcome-subtitle {
+  font-size: 15px; color: var(--t-mid);
+  text-align: center; margin-bottom: 46px; font-weight: 400;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 7 — QUICK ACTION CARDS
+   Five glass layers — the most visible glass surfaces.
+   ───────────────────────────────────────────────────────────────────────────── */
+.quick-actions {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 14px; width: 100%;
+}
+
+.quick-action {
+  position: relative;
+  display: flex; flex-direction: column;
+  justify-content: space-between; gap: 18px;
+  padding: 22px 22px 20px; border-radius: 20px;
+  cursor: pointer; text-align: left; overflow: hidden;
+
+  /* Layer 1: angled translucent glass body */
+  background: var(--g-card);
+
+  /* Layer 2: backdrop diffusion — blurs whatever is behind */
+  backdrop-filter: blur(var(--blur-md)) var(--sat-lg);
+  -webkit-backdrop-filter: blur(var(--blur-md)) var(--sat-lg);
+
+  /* Layer 3: glass boundary */
+  border: 1px solid var(--g-border-2);
+
+  /* Layer 4+5: inner specular rim + external shadow depth */
+  box-shadow:
+    inset 0 1px 0 var(--g-spec-top),
+    inset 1px 0 0 var(--g-spec-left),
+    inset 0 -1px 0 var(--g-spec-bottom),
+    var(--shadow-md);
+
+  transition: background var(--ease), border-color var(--ease), box-shadow var(--ease);
+}
+
+/* Layer: upper-left specular — strongest glass reflection point */
+.quick-action::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 20px;
+  background: linear-gradient(130deg,
+    rgba(255,255,255,0.100) 0%,
+    rgba(255,255,255,0.030) 25%,
+    transparent 48%
+  );
+  pointer-events: none; z-index: 0;
+}
+/* Layer: lower-right depth shadow */
+.quick-action::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 20px;
+  background: linear-gradient(315deg,
+    rgba(0,0,0,0.08) 0%,
+    transparent 42%
+  );
+  pointer-events: none; z-index: 0;
+}
+
+.quick-action:hover {
+  background: var(--g-card-hover);
+  border-color: var(--g-border-3);
+  box-shadow:
+    inset 0 1px 0 var(--g-spec-strong),
+    inset 1px 0 0 rgba(255,255,255,0.055),
+    inset 0 -1px 0 var(--g-spec-bottom),
+    var(--shadow-lg);
+}
+/* Framer Motion handles translateY(-2px) via whileHover prop in WelcomeScreen.jsx */
+
+.quick-action-header {
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 1;
+}
+
+/* Icon box: Level 3 glass miniature object */
+.quick-action-icon-box {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--t-hi); position: relative;
+
+  background: linear-gradient(145deg,
+    rgba(255,255,255,0.100) 0%,
+    rgba(255,255,255,0.050) 100%
+  );
+  border: 1px solid var(--g-border-2);
+  backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  box-shadow: inset 0 1px 0 var(--g-spec-top), var(--shadow-sm);
+}
+.quick-action-icon-box::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.080) 0%, transparent 42%);
+  pointer-events: none;
+}
+
+.quick-action-arrow {
+  font-size: 13px; color: var(--t-lo);
+  position: relative; z-index: 1;
+  transition: transform var(--ease-fast), color var(--ease-fast);
+}
+.quick-action:hover .quick-action-arrow { color: var(--t-hi); transform: translate(2px,-2px); }
+
+.quick-action-text { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 5px; }
+.quick-action-title { font-size: 14px; font-weight: 600; color: var(--t-hi); letter-spacing: -0.1px; }
+.quick-action-desc  { font-size: 12.5px; color: var(--t-mid); line-height: 1.4; }
+
+
+
+@media (max-width: 1100px) {
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-screen {
+    padding: 32px 20px;
+  }
+}
+
+@media (max-width: 680px) {
+  .welcome-screen {
+    justify-content: flex-start;
+    padding: 56px 16px 28px;
+  }
+
+  .welcome-logo-wrapper {
+    margin-bottom: 24px;
+  }
+
+  .welcome-greeting {
+    font-size: 29px;
+  }
+
+  .welcome-subtitle {
+    margin-bottom: 32px;
+  }
+
+  .quick-action {
+    min-height: 144px;
+    padding: 18px;
+  }
+}
+

@@ -6,6 +6,8 @@ import toast from 'react-hot-toast';
 import Sidebar from '../components/layout/Sidebar';
 import ChatWindow from '../components/chat/ChatWindow';
 import MessageInput from '../components/chat/MessageInput';
+import '../styles/legacy-page-styles.css';
+import './Home.css';
 import DashboardPage from '../components/pages/DashboardPage';
 import MemoryPage from '../components/pages/MemoryPage';
 import TasksPage from '../components/pages/TasksPage';
@@ -42,13 +44,23 @@ export default function Home() {
   const { isElectron, desktopAPI } = useDesktopBridge();
 
   const chatInputFocusRef = useRef(null); // set by MessageInput via callback
+  const registerChatInputFocus = useCallback((focus) => {
+    chatInputFocusRef.current = focus;
+  }, []);
 
   const pendingTasks = tasks.filter(t => !t.completed).length;
 
-  // ── Quick actions ─────────────────────────────────────────────────────────
-  const handleQuickAction = useCallback((prompt) => {
+  // ── New Chat & Quick Action Handlers ─────────────────────────────────────
+  const handleNewChat = useCallback(() => {
+    clearMessages();
     setQuickActionPrompt('');
+    setPage('chat');
   }, [clearMessages]);
+
+  const handleQuickAction = useCallback((prompt) => {
+    setQuickActionPrompt(prompt || '');
+    setPage('chat');
+  }, []);
 
   // ── File drop handler (from DragDropOverlay) ──────────────────────────────
   const handleFilesAccepted = useCallback((files) => {
@@ -235,7 +247,7 @@ export default function Home() {
                     isStreaming={isStreaming}
                     initialValue={quickActionPrompt}
                     key={quickActionPrompt}
-                    onFocusRef={chatInputFocusRef}
+                    onFocusRef={registerChatInputFocus}
                     onVoiceTrigger={() => {
                       setVoiceExperienceOpen(true);
                       if (isElectron) {

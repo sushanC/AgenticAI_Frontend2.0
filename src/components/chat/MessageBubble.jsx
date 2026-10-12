@@ -5,6 +5,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Sparkles, Copy, Check, RotateCcw, Mail, HelpCircle } from 'lucide-react';
 import ConfirmationCard from './ConfirmationCard';
+import './MessageBubble.css';
 
 function CodeBlock({ children, className }) {
   const [copied, setCopied] = useState(false);
@@ -178,6 +179,7 @@ export default function MessageBubble({ message, isLast, onRegenerate, onConfirm
               <ReactMarkdown
                 components={{
                   code({ node, inline, className, children, ...props }) {
+                    void node;
                     if (inline) return <code className={className} {...props}>{children}</code>;
                     return <CodeBlock className={className}>{children}</CodeBlock>;
                   },
@@ -217,4 +219,3 @@ export default function MessageBubble({ message, isLast, onRegenerate, onConfirm
     </motion.div>
   );
 }
-

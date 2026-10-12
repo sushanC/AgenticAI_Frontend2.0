@@ -3,6 +3,7 @@ import WelcomeScreen from './WelcomeScreen';
 import MessageBubble from './MessageBubble';
 import AgentActivityPanel from './AgentActivityPanel';
 import TypingIndicator from './TypingIndicator';
+import './ChatWindow.css';
 
 export default function ChatWindow({
   messages, isStreaming, agentPhase, timeline, onQuickAction, onRegenerate,
@@ -49,4 +50,3 @@ export default function ChatWindow({
     </div>
   );
 }
-

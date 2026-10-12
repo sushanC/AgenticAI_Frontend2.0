@@ -1,0 +1,248 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 16 — GLASS CONTROLS (attachment chips, shared utilities)
+   ───────────────────────────────────────────────────────────────────────────── */
+.attachment-chips-container { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 14px 6px; }
+.attachment-chip {
+  display: flex; align-items: center; gap: 6px; padding: 4px 9px 4px 7px;
+  border-radius: 9px; font-size: 12px; color: var(--t-hi);
+  background: rgba(255,255,255,0.055); border: 1px solid var(--g-border-2);
+  backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+}
+.chip-preview-img { width: 20px; height: 20px; border-radius: 4px; object-fit: cover; }
+.chip-file-icon   { color: var(--t-mid); }
+.chip-filename    { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11.5px; color: var(--t-mid); }
+.chip-remove-btn  {
+  border: none; background: transparent; color: var(--t-lo); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2px; border-radius: 4px;
+  transition: color var(--ease-fast), background var(--ease-fast);
+}
+.chip-remove-btn:hover { color: var(--c-err); background: rgba(239,68,68,0.10); }
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 17 — COMPOSER / MESSAGE INPUT
+   
+   The flagship glass element. Floats above the application.
+   Uses the strongest glass values in the entire system.
+   ───────────────────────────────────────────────────────────────────────────── */
+.input-area { flex-shrink: 0; padding: 0 32px 24px; background: transparent; }
+.input-container {
+  max-width: clamp(640px, 78vw, 840px);
+  margin: 0 auto; position: relative;
+}
+
+/* The floating glass capsule */
+.input-box {
+  position: relative;
+  display: flex; align-items: flex-end; gap: 8px;
+  padding: 13px 14px; border-radius: 26px;
+
+  /* Level 4 — strongest glass: barely dark, heavily blurred background */
+  background: var(--g-composer);
+  border: 1px solid var(--g-border-3);
+  backdrop-filter: blur(var(--blur-xl)) var(--sat-xl);
+  -webkit-backdrop-filter: blur(var(--blur-xl)) var(--sat-xl);
+  box-shadow:
+    inset 0 1px 0 var(--g-spec-strong),
+    inset 0 -1px 0 var(--g-spec-bottom),
+    var(--shadow-xl);
+
+  transition: border-color var(--ease), background var(--ease), box-shadow var(--ease);
+}
+
+/* Hairline specular stripe across the very top of the capsule */
+.input-box::before {
+  content: '';
+  position: absolute; top: 0; left: 22px; right: 22px; height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.260) 25%,
+    rgba(255,255,255,0.320) 50%,
+    rgba(255,255,255,0.260) 75%,
+    transparent 100%
+  );
+  border-radius: 9999px; pointer-events: none;
+}
+
+/* Corner glass reflection */
+.input-box::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 26px;
+  background: linear-gradient(130deg,
+    rgba(255,255,255,0.080) 0%,
+    rgba(255,255,255,0.022) 22%,
+    transparent 42%
+  );
+  pointer-events: none;
+}
+
+.input-box:focus-within {
+  border-color: var(--g-border-4);
+  background: var(--g-composer-focus);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.200),
+    inset 0 -1px 0 var(--g-spec-bottom),
+    0 0 0 1px rgba(255,255,255,0.095),
+    var(--shadow-xl);
+}
+
+/* ── CRITICAL: override index.css nuclear textarea rule ── */
+.input-box .input-textarea,
+textarea.input-textarea {
+  flex: 1;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: rgba(255,255,255,0.94) !important;
+  font-size: 14.5px !important;
+  line-height: 1.52 !important;
+  resize: none;
+  max-height: 200px;
+  min-height: 24px;
+  padding: 5px 0 !important;
+  caret-color: rgba(255,255,255,0.90) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif !important;
+  position: relative; z-index: 1;
+}
+.input-box .input-textarea:hover,
+textarea.input-textarea:hover,
+.input-box .input-textarea:focus,
+textarea.input-textarea:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+textarea.input-textarea::placeholder { color: rgba(255,255,255,0.34) !important; opacity: 1 !important; }
+
+/* Glass icon buttons inside composer */
+.input-left-btn {
+  width: 34px; height: 34px; border-radius: 10px;
+  border: none; background: transparent; color: var(--t-lo);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; position: relative; z-index: 1;
+  transition: background var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast);
+}
+.input-left-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.080);
+  color: var(--t-hi);
+}
+.input-left-btn:disabled { opacity: 0.24; cursor: not-allowed; }
+
+/* Send button — inverted glass: light circle on dark */
+.send-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: none; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+
+  background: rgba(255,255,255,0.94);
+  color: #05050A;
+  box-shadow: 0 2px 12px rgba(255,255,255,0.16), inset 0 1px 0 #FFFFFF;
+  transition: background var(--ease-fast), transform var(--ease-fast), box-shadow var(--ease-fast);
+}
+.send-btn:hover:not(:disabled) {
+  background: #FFFFFF;
+  box-shadow: 0 4px 20px rgba(255,255,255,0.22);
+}
+.send-btn:disabled {
+  background: rgba(255,255,255,0.068); color: var(--t-lo);
+  box-shadow: none; opacity: 0.38; cursor: not-allowed;
+}
+
+/* Footer row */
+.input-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 9px; padding: 0 6px;
+}
+.input-hint { font-size: 11.5px; color: var(--t-dim); }
+.input-hint strong { color: var(--t-lo); font-weight: 500; }
+
+/* Model selector glass capsule */
+.input-model-pill {
+  display: flex; align-items: center; gap: 5px; padding: 4px 12px;
+  font-size: 11.5px; font-weight: 500; color: var(--t-mid);
+  border-radius: 9999px; cursor: pointer;
+  background: rgba(255,255,255,0.042);
+  border: 1px solid var(--g-border-1);
+  backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  transition: background var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
+}
+.input-model-pill:hover {
+  background: rgba(255,255,255,0.075);
+  border-color: var(--g-border-2); color: var(--t-hi);
+}
+
+/* Model dropdown — highest elevation glass */
+.model-dropdown {
+  position: absolute; bottom: calc(100% + 10px); right: 0; z-index: 100;
+  min-width: 184px; padding: 6px; border-radius: 16px;
+
+  /* Nearly opaque dark base, but glass-bordered and blurred */
+  background: rgba(6,6,10,0.90);
+  border: 1px solid var(--g-border-3);
+  backdrop-filter: blur(var(--blur-xl)) var(--sat-xl);
+  -webkit-backdrop-filter: blur(var(--blur-xl)) var(--sat-xl);
+  box-shadow:
+    inset 0 1px 0 var(--g-spec-top),
+    0 20px 60px rgba(0,0,0,0.72),
+    0 4px 18px rgba(0,0,0,0.38);
+}
+.model-dropdown-header {
+  font-size: 10px; font-weight: 700; color: var(--t-lo);
+  text-transform: uppercase; letter-spacing: 0.8px; padding: 6px 10px 4px;
+}
+.model-option {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 8px 10px; border-radius: 9px;
+  background: transparent; border: none;
+  color: var(--t-mid); font-size: 12.5px; font-weight: 500; cursor: pointer;
+  transition: background var(--ease-fast), color var(--ease-fast);
+}
+.model-option:hover    { background: rgba(255,255,255,0.060); color: var(--t-hi); }
+.model-option.selected { background: rgba(255,255,255,0.075); color: var(--t-hi); font-weight: 600; }
+.model-check-icon      { color: var(--c-acc); }
+
+
+
+.input-left-btn:focus-visible,
+.send-btn:focus-visible,
+.input-model-pill:focus-visible,
+.model-option:focus-visible,
+.chip-remove-btn:focus-visible {
+  outline-color: var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1100px) {
+  .input-area {
+    padding: 0 20px 18px;
+  }
+}
+
+@media (max-width: 680px) {
+  .input-area {
+    padding: 0 16px 16px;
+  }
+
+  .input-box {
+    gap: 4px;
+    padding: 10px;
+    border-radius: 20px;
+  }
+
+  .input-footer {
+    gap: 10px;
+  }
+
+  .input-hint {
+    max-width: 220px;
+    line-height: 1.35;
+  }
+}
+

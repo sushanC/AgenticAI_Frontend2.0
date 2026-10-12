@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp, ChevronDown, Sliders, Mic, Volume2, Globe, Cpu, ShieldCheck } from 'lucide-react';
 
@@ -7,7 +7,6 @@ export default function VoiceSessionInfo({
   settings,
   activeMic,
   activeSpeaker,
-  status,
 }) {
   const [isOpen, setIsOpen] = useState(false);
 

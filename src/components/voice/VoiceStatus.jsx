@@ -1,51 +1,43 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+
+import { motion, AnimatePresence } from 'framer-motion';
+
+const STATUS_MAP = {
+  idle:       { primary: 'IDLE',       secondary: 'samGPT · VOICE CORE' },
+  listening:  { primary: 'LISTENING',  secondary: 'Receiving input' },
+  processing: { primary: 'THINKING',   secondary: 'Processing request' },
+  speaking:   { primary: 'SPEAKING',   secondary: 'Synthesizing response' },
+  error:      { primary: 'ERROR',      secondary: 'State disrupted' },
+};
 
 export default function VoiceStatus({ status }) {
-  const getStatusText = () => {
-    switch (status) {
-      case 'listening':
-        return {
-          title: "I'm listening.",
-          subtitle: 'Take your time.',
-        };
-      case 'processing':
-        return {
-          title: 'Thinking...',
-          subtitle: 'Working on that...',
-        };
-      case 'speaking':
-        return {
-          title: "Here's what I found.",
-          subtitle: 'Synthesizing response...',
-        };
-      case 'error':
-        return {
-          title: 'Something went wrong.',
-          subtitle: "Let's try again.",
-        };
-      case 'idle':
-      default:
-        return {
-          title: 'Ask me anything.',
-          subtitle: 'Tap the orb or start speaking',
-        };
-    }
-  };
-
-  const { title, subtitle } = getStatusText();
+  const { primary, secondary } = STATUS_MAP[status] || STATUS_MAP.idle;
 
   return (
-    <motion.div
-      key={status}
-      className="voice-status-block"
-      initial={{ opacity: 0, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -4 }}
-      transition={{ duration: 0.2 }}
-    >
-      <h2 className="voice-status-title">{title}</h2>
-      <p className="voice-status-subtitle">{subtitle}</p>
-    </motion.div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={status}
+        className="voice-status-block"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -5 }}
+        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <div className="voice-status-telemetry-row">
+          {/* Live state indicator dot */}
+          <span
+            className={`voice-status-dot ${status}`}
+            aria-hidden="true"
+          />
+          {/* Primary state label */}
+          <span className={`voice-status-primary ${status}`}>
+            {primary}
+          </span>
+        </div>
+        {/* Secondary identity */}
+        <p className="voice-status-secondary">{secondary}</p>
+      </motion.div>
+    </AnimatePresence>
   );
 }

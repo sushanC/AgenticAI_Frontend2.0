@@ -1,26 +1,24 @@
-import React from 'react';
-import { Sparkles, X } from 'lucide-react';
+
+import { X } from 'lucide-react';
 
 export default function VoiceHeader({ onClose }) {
   return (
     <div className="voice-exp-header">
-      <div className="voice-exp-logo-group">
-        <div className="voice-header-logo-badge">
-          <Sparkles size={16} className="voice-logo-icon" />
-        </div>
-        <div className="voice-header-title-group">
-          <span className="voice-exp-title">samGPT Voice</span>
-          <span className="voice-exp-subtitle">Desktop Assistant</span>
-        </div>
+      {/* Floating identity — minimal wordmark */}
+      <div className="voice-header-identity">
+        <span className="voice-header-wordmark">samGPT</span>
+        <span className="voice-header-label">INTELLIGENCE CORE</span>
       </div>
 
+      {/* Glass close capsule */}
       <button
         type="button"
         className="voice-exp-close-btn"
         onClick={onClose}
-        title="Close Voice Experience (Esc)"
+        title="Close (Esc)"
+        aria-label="Close Voice Experience"
       >
-        <X size={16} />
+        <X size={13} strokeWidth={1.8} />
       </button>
     </div>
   );

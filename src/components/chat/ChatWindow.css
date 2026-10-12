@@ -1,0 +1,68 @@
+/* Conversation viewport: one scroll surface, with only the compositor-level glass layers. */
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 3 — LAYOUT CONTAINERS
+   ───────────────────────────────────────────────────────────────────────────── */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.09) transparent;
+}
+.messages-container::-webkit-scrollbar       { width: 4px; }
+.messages-container::-webkit-scrollbar-track { background: transparent; }
+.messages-container::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 9999px;
+}
+.messages-container::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+.messages-inner {
+  max-width: clamp(640px, 78vw, 840px);
+  margin: 0 auto;
+  padding: 40px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.streaming-activity-wrapper {
+  padding-left: 40px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.messages-bottom-anchor { height: 1px; }
+
+
+
+@media (max-width: 1100px) {
+  .messages-inner {
+    max-width: min(840px, 100%);
+    padding: 28px 20px 20px;
+  }
+
+  .streaming-activity-wrapper {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 680px) {
+  .messages-inner {
+    padding: 22px 16px 18px;
+    gap: 16px;
+  }
+}
+

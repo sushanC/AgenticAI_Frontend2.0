@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   VoiceWidget.css — Lightweight Floating Launcher
+   VoiceWidget.css — Miniature Intelligence Core Launcher
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .voice-widget-launcher-container {
@@ -13,75 +13,90 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-full);
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
+  gap: 9px;
+  padding: 7px 14px 7px 8px;
+  background: rgba(8, 8, 8, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: var(--shadow-md);
-  transition: all var(--transition);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04) inset,
+    0 8px 28px rgba(0, 0, 0, 0.55);
+  transition: background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
   outline: none;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .voice-launcher-btn:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--divider);
+  background: rgba(16, 16, 16, 0.92);
+  border-color: rgba(255, 255, 255, 0.13);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 12px 36px rgba(0, 0, 0, 0.65);
+}
+
+.voice-launcher-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .voice-launcher-btn.active {
-  border-color: var(--divider);
-  background: var(--bg-tertiary);
+  background: rgba(14, 14, 14, 0.95);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
-.voice-launcher-ring {
+/* Mini core canvas */
+.voice-widget-mini-canvas {
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* State ring — subtle outer pulse */
+.voice-widget-ring {
   position: absolute;
   inset: -3px;
-  border-radius: var(--radius-full);
-  border: 1.5px solid transparent;
+  border-radius: 99px;
+  border: 1px solid transparent;
   pointer-events: none;
-  transition: border-color var(--transition);
+  transition: border-color 400ms ease;
 }
 
-.voice-launcher-ring.listening {
-  border-color: #818CF8;
-  animation: launcher-pulse 1.6s ease-in-out infinite;
+.voice-widget-ring.listening {
+  border-color: rgba(255, 255, 255, 0.22);
+  animation: widget-ring-pulse 1.6s ease-in-out infinite;
 }
 
-.voice-launcher-ring.speaking {
-  border-color: var(--success);
-  animation: launcher-pulse 1.6s ease-in-out infinite;
+.voice-widget-ring.speaking {
+  border-color: rgba(255, 255, 255, 0.18);
+  animation: widget-ring-pulse 1.2s ease-in-out infinite;
 }
 
-.voice-launcher-ring.processing {
-  border-color: #C084FC;
-  animation: launcher-pulse 1.6s ease-in-out infinite;
+.voice-widget-ring.processing {
+  border-color: rgba(200, 200, 200, 0.12);
+  animation: widget-ring-pulse 2s ease-in-out infinite;
 }
 
-@keyframes launcher-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.08); opacity: 0.4; }
-}
-
-.voice-launcher-icon-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mic-icon-pulse {
-  color: #818CF8;
-  animation: mic-pulse 1.2s ease-in-out infinite alternate;
-}
-
-@keyframes mic-pulse {
-  from { transform: scale(1); }
-  to { transform: scale(1.15); }
+@keyframes widget-ring-pulse {
+  0%, 100% { transform: scale(1);    opacity: 0.8; }
+  50%       { transform: scale(1.06); opacity: 0.35; }
 }
 
 .voice-launcher-label {
-  font-size: 12.5px;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 250ms ease;
+}
+
+.voice-launcher-btn.active .voice-launcher-label {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.voice-launcher-btn:hover .voice-launcher-label {
+  color: rgba(255, 255, 255, 0.7);
 }

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Paperclip, Mic, ArrowUp, ChevronDown, Check, X, FileText, Image as ImageIcon } from 'lucide-react';
+import { Paperclip, Mic, ArrowUp, ChevronDown, Check, X, FileText } from 'lucide-react';
 import { normalizeAttachment } from '../../utils/attachmentNormalizer';
+import './MessageInput.css';
 
 const MODELS = ['Auto', 'DeepSeek', 'Gemini', 'Groq', 'OpenRouter', 'Ollama'];
 
@@ -11,6 +12,7 @@ export default function MessageInput({
   initialValue = '',
   onVoiceTrigger = () => {},
   onFileUpload = null,
+  onFocusRef = null,
 }) {
   const [text, setText] = useState(initialValue);
   const [selectedModel, setSelectedModel] = useState('Auto');
@@ -28,11 +30,15 @@ export default function MessageInput({
   }, [text]);
 
   useEffect(() => {
-    if (initialValue) {
-      setText(initialValue);
-      textareaRef.current?.focus();
+    const focusInput = () => textareaRef.current?.focus();
+
+    if (typeof onFocusRef === 'function') {
+      onFocusRef(focusInput);
+      return () => onFocusRef(null);
     }
-  }, [initialValue]);
+
+    return undefined;
+  }, [onFocusRef]);
 
   const handleFileChange = useCallback(
     e => {

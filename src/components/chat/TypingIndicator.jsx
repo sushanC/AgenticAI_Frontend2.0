@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import './TypingIndicator.css';
 
 export default function TypingIndicator() {
   return (

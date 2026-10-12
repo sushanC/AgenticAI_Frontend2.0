@@ -1,0 +1,372 @@
+/* ==========================================================================
+   samGPT — Home & Chat: TRUE Liquid Glass Material System  v2.0
+   
+   The fundamental law of dark liquid glass:
+     Glass surfaces must use light-tinted rgba (white at low opacity),
+     NOT dark-tinted rgba. Dark bg + dark glass = opaque black.
+     Dark bg + near-transparent white glass = visible translucency.
+   
+   Single dedicated stylesheet. Import ONLY in src/pages/Home.jsx.
+   DO NOT put page-specific rules in index.css.
+   ========================================================================== */
+
+
+/* Material tokens are defined globally in src/index.css. */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 2 — BACKGROUND ATMOSPHERE
+   
+   The glass cannot look like glass without visible depth behind it.
+   This is what the blur and saturation actually work on.
+   
+   Rule: Background gradients must be BRIGHT enough to show through glass.
+   Previous version had 0.014–0.048 opacity — too dim. Now using 0.06–0.12+.
+   ───────────────────────────────────────────────────────────────────────────── */
+.app-shell {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+
+  /* Base: deep near-black with slight blue-gray tint (avoids pure dead black) */
+  background: var(--bg-app);
+
+  /* Three atmospheric light sources on the canvas — MUST be visible through glass */
+  background-image:
+    /* Primary ceiling light — the "lamp" the glass is lit by */
+    radial-gradient(ellipse 90% 60% at 50% -8%,
+      rgba(255,255,255,0.095) 0%,
+      rgba(255,255,255,0.040) 30%,
+      transparent 65%
+    ),
+    /* Lower-left ambient */
+    radial-gradient(ellipse 55% 40% at 8% 88%,
+      rgba(255,255,255,0.045) 0%,
+      transparent 60%
+    ),
+    /* Lower-right fill */
+    radial-gradient(ellipse 45% 35% at 92% 85%,
+      rgba(255,255,255,0.030) 0%,
+      transparent 55%
+    );
+}
+
+/* Atmospheric luminance layer — sits beneath all glass, above base */
+.app-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    /* Central ceiling bloom — visible through sidebar glass */
+    radial-gradient(ellipse 80% 52% at 50% 0%,
+      rgba(255,255,255,0.075) 0%,
+      rgba(255,255,255,0.028) 40%,
+      transparent 68%
+    ),
+    /* Mid-left subtle fill */
+    radial-gradient(ellipse 40% 30% at 12% 55%,
+      rgba(255,255,255,0.025) 0%,
+      transparent 58%
+    );
+}
+
+/* Corner depth vignette — makes center feel elevated above edges */
+.app-shell::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background: radial-gradient(
+    ellipse 160% 160% at 50% 50%,
+    transparent 35%,
+    rgba(0,0,0,0.38) 100%
+  );
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 4 — SIDEBAR: SMOKED GLASS PANE
+   
+   Critical fix from v1.6:
+   Old: rgba(10,10,13,0.60) = 60% opaque dark = backdrop-filter invisible
+   New: rgba(255,255,255,0.042) = near-transparent white-glass over dark bg
+        backdrop-filter MUST have something to blur — the background is now
+        bright enough (section 2) to diffuse visibly through the sidebar.
+   ───────────────────────────────────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w, 260px);
+  min-width: var(--sidebar-w, 260px);
+  height: 100vh;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 12px;
+  overflow: hidden;
+
+  /* TRUE smoked glass: white-tinted translucency, not dark opacity */
+  background: var(--g-sidebar);
+  backdrop-filter: blur(var(--blur-md)) var(--sat-lg);
+  -webkit-backdrop-filter: blur(var(--blur-md)) var(--sat-lg);
+
+  border-right: 1px solid var(--g-border-1);
+  box-shadow:
+    inset -1px 0 0 rgba(255,255,255,0.040),
+    8px 0 28px rgba(0,0,0,0.24);
+}
+
+/* Ceiling light hitting the top of the glass sidebar */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 220px;
+  pointer-events: none;
+  z-index: 0;
+
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.065) 0%,
+    transparent 100%
+  );
+}
+
+/* Subtle left-edge specular — light catching the inner left wall */
+.sidebar::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  width: 1px;
+  pointer-events: none;
+  z-index: 1;
+
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.08) 0%,
+    rgba(255,255,255,0.04) 30%,
+    transparent 70%
+  );
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px 18px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Logo: small elevated glass object */
+.sidebar-logo {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--t-hi);
+  position: relative;
+
+  background: linear-gradient(145deg,
+    rgba(255,255,255,0.100) 0%,
+    rgba(255,255,255,0.048) 100%
+  );
+  border: 1px solid var(--g-border-2);
+  backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  box-shadow:
+    inset 0 1px 0 var(--g-spec-top),
+    var(--shadow-sm);
+}
+.sidebar-logo::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+.sidebar-title {
+  font-size: 14px; font-weight: 600; color: var(--t-hi);
+  letter-spacing: -0.2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+}
+.sidebar-sub { font-size: 11px; color: var(--t-lo); margin-top: 1px; }
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 5 — NAVIGATION
+   ───────────────────────────────────────────────────────────────────────────── */
+.new-chat-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: calc(100% - 4px); margin: 0 2px 16px;
+  padding: 10px 14px; border-radius: 11px;
+  cursor: pointer; font-size: 13px; font-weight: 500; color: var(--t-hi);
+  position: relative; z-index: 1;
+
+  /* Glass control */
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.080) 0%,
+    rgba(255,255,255,0.036) 100%
+  );
+  border: 1px solid var(--g-border-2);
+  backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  box-shadow:
+    inset 0 1px 0 var(--g-spec-top),
+    var(--shadow-sm);
+
+  transition: background var(--ease), border-color var(--ease),
+              box-shadow var(--ease), transform var(--ease-fast);
+}
+/* Corner specular reflection */
+.new-chat-btn::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 11px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.075) 0%, transparent 38%);
+  pointer-events: none;
+}
+.new-chat-btn:hover {
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.105) 0%,
+    rgba(255,255,255,0.055) 100%
+  );
+  border-color: var(--g-border-3);
+  box-shadow: inset 0 1px 0 var(--g-spec-strong), var(--shadow-md);
+  transform: translateY(-1px);
+}
+.new-chat-btn:active { transform: scale(0.984); }
+
+.sidebar-nav-grouped {
+  flex: 1; display: flex; flex-direction: column; gap: 16px;
+  overflow-y: auto; padding: 0 2px;
+  scrollbar-width: none; position: relative; z-index: 1;
+}
+.sidebar-nav-grouped::-webkit-scrollbar { display: none; }
+
+.nav-group-section { display: flex; flex-direction: column; gap: 2px; }
+.nav-group-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.9px;
+  text-transform: uppercase; color: var(--t-dim); padding: 0 10px 6px;
+}
+.nav-group-items { display: flex; flex-direction: column; gap: 2px; }
+
+.nav-item-row {
+  position: relative;
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 10px;
+  cursor: pointer; color: var(--t-mid);
+  font-size: 13px; font-weight: 500;
+  background: transparent; border: 1px solid transparent;
+  width: 100%; text-align: left;
+  transition: color var(--ease-fast), background var(--ease-fast), border-color var(--ease-fast);
+}
+.nav-item-row:hover:not(.active) {
+  color: var(--t-hi);
+  background: rgba(255,255,255,0.055);
+  border-color: var(--g-border-1);
+}
+.nav-item-row.active { color: var(--t-hi); font-weight: 600; }
+
+/* Active glass pill — Framer Motion layoutId="navActiveHighlight" */
+.nav-active-pill {
+  position: absolute; inset: 0; border-radius: 10px; z-index: 0;
+
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.095) 0%,
+    rgba(255,255,255,0.052) 55%,
+    rgba(255,255,255,0.034) 100%
+  );
+  border: 1px solid var(--g-border-2);
+  backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  box-shadow:
+    inset 0 1px 0 var(--g-spec-top),
+    inset 1px 0 0 var(--g-spec-left),
+    var(--shadow-sm);
+}
+/* Corner specular on active pill */
+.nav-active-pill::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.080) 0%, transparent 35%);
+  pointer-events: none;
+}
+.nav-icon, .nav-label { position: relative; z-index: 1; }
+
+/* Sidebar footer */
+.sidebar-bottom-v2 {
+  display: flex; flex-direction: column; gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.052);
+  margin-top: 8px;
+  position: relative; z-index: 1;
+}
+
+/* Model status card */
+.model-pill-v2 {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 10px;
+
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.060) 0%,
+    rgba(255,255,255,0.028) 100%
+  );
+  border: 1px solid var(--g-border-1);
+  backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.080), var(--shadow-sm);
+}
+.model-dot-emerald {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--c-ok);
+  box-shadow: 0 0 8px rgba(34,197,94,0.55);
+  flex-shrink: 0;
+}
+.model-pill-text { display: flex; flex-direction: column; }
+.model-name { font-size: 12px; font-weight: 600; color: var(--t-hi); }
+.model-sub  { font-size: 10px; color: var(--t-lo); margin-top: 1px; }
+
+.sidebar-meta-list { display: flex; flex-direction: column; gap: 2px; }
+.sidebar-info-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 8px; font-size: 11.5px; color: var(--t-lo); border-radius: 6px;
+}
+.sidebar-info-row .info-label { display: flex; align-items: center; gap: 5px; }
+.sidebar-info-row .info-val   { color: var(--t-mid); font-weight: 500; }
+.sidebar-info-row .info-val.highlight { color: var(--t-hi); }
+
+
+
+
+/* The chat viewport keeps its own component styles; this file owns the shared Home composition. */
+@media (max-width: 900px) {
+  .sidebar {
+    width: 200px;
+    min-width: 200px;
+    padding: 14px 8px;
+  }
+
+  .sidebar-title {
+    font-size: 13px;
+  }
+
+  .new-chat-btn {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+}
+
