@@ -68,7 +68,7 @@ export default function NotesPanel() {
         <h1
           style={{
             margin: 0,
-            fontSize: "32px"
+            fontSize: "var(--type-display)"
           }}
         >
           Notes

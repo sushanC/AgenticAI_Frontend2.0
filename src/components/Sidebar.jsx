@@ -15,7 +15,7 @@ export default function Sidebar({
     color: "#E5E7EB",
     cursor: "pointer",
     textAlign: "left",
-    fontSize: "15px",
+    fontSize: "var(--type-body)",
     transition: "all 0.25s ease"
   };
 
@@ -62,7 +62,7 @@ export default function Sidebar({
           style={{
             color: "#9CA3AF",
             marginTop: "8px",
-            fontSize: "13px"
+            fontSize: "var(--type-navigation)"
           }}
         >
           AI Assistant

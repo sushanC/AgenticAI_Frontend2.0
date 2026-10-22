@@ -4,14 +4,14 @@
 .attachment-chips-container { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 14px 6px; }
 .attachment-chip {
   display: flex; align-items: center; gap: 6px; padding: 4px 9px 4px 7px;
-  border-radius: 9px; font-size: 12px; color: var(--t-hi);
+  border-radius: 9px; font-size: 0.75rem; color: var(--t-hi);
   background: rgba(255,255,255,0.055); border: 1px solid var(--g-border-2);
   backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
   -webkit-backdrop-filter: blur(var(--blur-sm)) var(--sat-md);
 }
 .chip-preview-img { width: 20px; height: 20px; border-radius: 4px; object-fit: cover; }
 .chip-file-icon   { color: var(--t-mid); }
-.chip-filename    { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11.5px; color: var(--t-mid); }
+.chip-filename    { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.71875rem; color: var(--t-mid); }
 .chip-remove-btn  {
   border: none; background: transparent; color: var(--t-lo); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
@@ -27,17 +27,17 @@
    The flagship glass element. Floats above the application.
    Uses the strongest glass values in the entire system.
    ───────────────────────────────────────────────────────────────────────────── */
-.input-area { flex-shrink: 0; padding: 0 32px 24px; background: transparent; }
+.input-area { flex-shrink: 0; padding: 0 36px 28px; background: transparent; }
 .input-container {
-  max-width: clamp(640px, 78vw, 840px);
+  max-width: clamp(680px, 80vw, 920px);
   margin: 0 auto; position: relative;
 }
 
 /* The floating glass capsule */
 .input-box {
   position: relative;
-  display: flex; align-items: flex-end; gap: 8px;
-  padding: 13px 14px; border-radius: 26px;
+  display: flex; align-items: flex-end; gap: 10px;
+  padding: 16px 17px; border-radius: 28px;
 
   /* Level 4 — strongest glass: barely dark, heavily blurred background */
   background: var(--g-composer);
@@ -98,11 +98,11 @@ textarea.input-textarea {
   outline: none !important;
   box-shadow: none !important;
   color: rgba(255,255,255,0.94) !important;
-  font-size: 14.5px !important;
+  font-size: var(--type-placeholder) !important;
   line-height: 1.52 !important;
   resize: none;
-  max-height: 200px;
-  min-height: 24px;
+  max-height: 240px;
+  min-height: 29px;
   padding: 5px 0 !important;
   caret-color: rgba(255,255,255,0.90) !important;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif !important;
@@ -117,16 +117,21 @@ textarea.input-textarea:focus {
   border-color: transparent !important;
   box-shadow: none !important;
 }
-textarea.input-textarea::placeholder { color: rgba(255,255,255,0.34) !important; opacity: 1 !important; }
+textarea.input-textarea::placeholder {
+  color: rgba(255,255,255,0.56) !important;
+  font-size: var(--type-placeholder) !important;
+  opacity: 1 !important;
+}
 
 /* Glass icon buttons inside composer */
 .input-left-btn {
-  width: 34px; height: 34px; border-radius: 10px;
+  width: var(--control-height-compact); height: var(--control-height-compact); border-radius: 11px;
   border: none; background: transparent; color: var(--t-lo);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; flex-shrink: 0; position: relative; z-index: 1;
   transition: background var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast);
 }
+.input-left-btn svg { width: var(--icon-size); height: var(--icon-size); }
 .input-left-btn:hover:not(:disabled) {
   background: rgba(255,255,255,0.080);
   color: var(--t-hi);
@@ -135,7 +140,7 @@ textarea.input-textarea::placeholder { color: rgba(255,255,255,0.34) !important;
 
 /* Send button — inverted glass: light circle on dark */
 .send-btn {
-  width: 34px; height: 34px; border-radius: 50%;
+  width: var(--control-height-compact); height: var(--control-height-compact); border-radius: 50%;
   border: none; cursor: pointer; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   position: relative; z-index: 1;
@@ -145,6 +150,7 @@ textarea.input-textarea::placeholder { color: rgba(255,255,255,0.34) !important;
   box-shadow: 0 2px 12px rgba(255,255,255,0.16), inset 0 1px 0 #FFFFFF;
   transition: background var(--ease-fast), transform var(--ease-fast), box-shadow var(--ease-fast);
 }
+.send-btn svg { width: var(--icon-size); height: var(--icon-size); }
 .send-btn:hover:not(:disabled) {
   background: #FFFFFF;
   box-shadow: 0 4px 20px rgba(255,255,255,0.22);
@@ -159,13 +165,13 @@ textarea.input-textarea::placeholder { color: rgba(255,255,255,0.34) !important;
   display: flex; align-items: center; justify-content: space-between;
   margin-top: 9px; padding: 0 6px;
 }
-.input-hint { font-size: 11.5px; color: var(--t-dim); }
+.input-hint { font-size: var(--type-caption); color: var(--t-lo); }
 .input-hint strong { color: var(--t-lo); font-weight: 500; }
 
 /* Model selector glass capsule */
 .input-model-pill {
-  display: flex; align-items: center; gap: 5px; padding: 4px 12px;
-  font-size: 11.5px; font-weight: 500; color: var(--t-mid);
+  display: flex; align-items: center; gap: 7px; min-height: 36px; padding: 5px 14px;
+  font-size: var(--type-label); font-weight: 500; color: var(--t-mid);
   border-radius: 9999px; cursor: pointer;
   background: rgba(255,255,255,0.042);
   border: 1px solid var(--g-border-1);
@@ -181,7 +187,7 @@ textarea.input-textarea::placeholder { color: rgba(255,255,255,0.34) !important;
 /* Model dropdown — highest elevation glass */
 .model-dropdown {
   position: absolute; bottom: calc(100% + 10px); right: 0; z-index: 100;
-  min-width: 184px; padding: 6px; border-radius: 16px;
+  min-width: 220px; padding: 8px; border-radius: 18px;
 
   /* Nearly opaque dark base, but glass-bordered and blurred */
   background: rgba(6,6,10,0.90);
@@ -194,14 +200,14 @@ textarea.input-textarea::placeholder { color: rgba(255,255,255,0.34) !important;
     0 4px 18px rgba(0,0,0,0.38);
 }
 .model-dropdown-header {
-  font-size: 10px; font-weight: 700; color: var(--t-lo);
-  text-transform: uppercase; letter-spacing: 0.8px; padding: 6px 10px 4px;
+  font-size: var(--type-overline); font-weight: 700; color: var(--t-lo);
+  text-transform: uppercase; letter-spacing: 1px; padding: 8px 12px 5px;
 }
 .model-option {
   display: flex; align-items: center; justify-content: space-between;
-  width: 100%; padding: 8px 10px; border-radius: 9px;
+  width: 100%; min-height: var(--control-height-compact); padding: 9px 12px; border-radius: 10px;
   background: transparent; border: none;
-  color: var(--t-mid); font-size: 12.5px; font-weight: 500; cursor: pointer;
+  color: var(--t-mid); font-size: var(--type-label); font-weight: 500; cursor: pointer;
   transition: background var(--ease-fast), color var(--ease-fast);
 }
 .model-option:hover    { background: rgba(255,255,255,0.060); color: var(--t-hi); }
@@ -232,7 +238,7 @@ textarea.input-textarea::placeholder { color: rgba(255,255,255,0.34) !important;
 
   .input-box {
     gap: 4px;
-    padding: 10px;
+    padding: 12px;
     border-radius: 20px;
   }
 

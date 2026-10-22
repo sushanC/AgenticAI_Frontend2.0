@@ -56,7 +56,7 @@ export default function SearchBar({
         {searchQuery && (
           <button
             className="dc-icon-btn"
-            style={{ width: 20, height: 20, fontSize: 10 }}
+            style={{ width: 20, height: 20, fontSize: 'var(--type-caption)' }}
             onClick={() => setSearchQuery('')}
             title="Clear search"
           >
@@ -131,7 +131,7 @@ export default function SearchBar({
       </div>
 
       {/* Result count */}
-      <span style={{ fontSize: 10, color: 'var(--text-muted)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+      <span style={{ fontSize: 'var(--type-caption)', color: 'var(--text-muted)', whiteSpace: 'nowrap', flexShrink: 0 }}>
         {filteredCount}/{totalCount}
       </span>
     </div>

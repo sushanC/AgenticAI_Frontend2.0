@@ -93,7 +93,7 @@ export default function TasksPanel() {
         <h1
           style={{
             margin: 0,
-            fontSize: "32px"
+            fontSize: "var(--type-display)"
           }}
         >
           Task Manager

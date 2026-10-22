@@ -111,7 +111,7 @@ export default function PDFPanel() {
         <h1
           style={{
             margin: 0,
-            fontSize: "32px"
+            fontSize: "var(--type-display)"
           }}
         >
           PDF Knowledge Base

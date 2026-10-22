@@ -30,7 +30,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 const STYLE = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+  :root {
+    --qa-type-body: 0.9375rem;
+    --qa-type-label: 0.75rem;
+    --qa-type-caption: 0.6875rem;
+    --qa-type-input: 0.9375rem;
+    --qa-type-placeholder: 0.875rem;
+  }
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 120%; }
 
   html, body {
     width: 100%;
@@ -80,7 +90,7 @@ const STYLE = `
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: var(--qa-type-body);
     color: #fff;
     font-weight: 700;
     flex-shrink: 0;
@@ -94,7 +104,7 @@ const STYLE = `
     outline: none;
     color: #ECECEC;
     font-family: inherit;
-    font-size: 15px;
+    font-size: var(--qa-type-input);
     line-height: 1.5;
     resize: none;
     overflow: hidden;
@@ -104,7 +114,7 @@ const STYLE = `
     -webkit-app-region: no-drag;
   }
 
-  .qa-input::placeholder { color: rgba(255,255,255,0.3); }
+  .qa-input::placeholder { color: rgba(255,255,255,0.52); font-size: var(--qa-type-placeholder); }
 
   .qa-send-btn {
     width: 30px;
@@ -113,7 +123,7 @@ const STYLE = `
     border: none;
     background: #10A37F;
     color: #fff;
-    font-size: 14px;
+    font-size: var(--qa-type-body);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -137,7 +147,7 @@ const STYLE = `
     overflow-y: auto;
     max-height: 380px;
     color: #ECECEC;
-    font-size: 14px;
+    font-size: var(--qa-type-body);
     line-height: 1.65;
   }
 
@@ -153,7 +163,7 @@ const STYLE = `
     align-items: center;
     gap: 8px;
     color: rgba(255,255,255,0.5);
-    font-size: 13px;
+    font-size: var(--qa-type-body);
   }
 
   .qa-dots span {
@@ -183,8 +193,8 @@ const STYLE = `
   }
 
   .qa-footer-hint {
-    font-size: 11px;
-    color: rgba(255,255,255,0.25);
+    font-size: var(--qa-type-caption);
+    color: rgba(255,255,255,0.5);
     display: flex;
     gap: 12px;
   }
@@ -194,14 +204,14 @@ const STYLE = `
     background: rgba(255,255,255,0.08);
     padding: 1px 5px;
     border-radius: 4px;
-    font-size: 10px;
+    font-size: var(--qa-type-caption);
   }
 
   .qa-clear-btn {
     background: transparent;
     border: none;
-    color: rgba(255,255,255,0.25);
-    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-size: var(--qa-type-caption);
     cursor: pointer;
     padding: 2px 6px;
     border-radius: 4px;
@@ -396,7 +406,7 @@ function QuickAskApp() {
                 </span>
               )}
               {error && (
-                <span style={{ color: '#ef4444', fontSize: 13 }}>⚠️ {error}</span>
+                <span style={{ color: '#ef4444', fontSize: 'var(--qa-type-body)' }}>⚠️ {error}</span>
               )}
             </div>
           </motion.div>

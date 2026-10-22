@@ -58,7 +58,7 @@ function PromptSection({ label, icon, colorClass, content, defaultOpen }) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <CopyButton text={content} />
-          <span style={{ fontSize: 10, color: 'var(--text-muted)', transition: 'transform 0.15s', transform: open ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
+          <span style={{ fontSize: 'var(--type-caption)', color: 'var(--text-muted)', transition: 'transform 0.15s', transform: open ? 'rotate(90deg)' : 'rotate(0deg)' }}>▶</span>
         </div>
       </div>
 
@@ -105,7 +105,7 @@ export default function PromptPanel({ request }) {
       <div className="dc-no-selection">
         <span className="dc-no-selection-icon">📝</span>
         <span>Prompt data not captured for this request.</span>
-        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Only available for requests made after the Developer Console was initialized.</span>
+        <span style={{ fontSize: 'var(--type-caption)', color: 'var(--text-muted)' }}>Only available for requests made after the Developer Console was initialized.</span>
       </div>
     );
   }

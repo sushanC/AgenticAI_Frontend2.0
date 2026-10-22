@@ -102,7 +102,7 @@ export default function ProviderPanel({ request, allRequests }) {
                 {isActive && (
                   <span
                     className="dc-badge dc-badge--success"
-                    style={{ fontSize: 9, padding: '1px 4px', marginLeft: 'auto' }}
+                    style={{ fontSize: 'var(--type-overline)', padding: '1px 4px', marginLeft: 'auto' }}
                   >
                     active
                   </span>

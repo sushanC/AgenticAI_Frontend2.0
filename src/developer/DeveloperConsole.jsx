@@ -32,8 +32,8 @@ function DetailsPanel({ request }) {
       <div className="dc-panel-right">
         <div className="dc-panel-header"><span>Summary</span></div>
         <div className="dc-no-selection" style={{ height: 'auto', padding: '24px 12px' }}>
-          <span style={{ fontSize: 24 }}>📊</span>
-          <span style={{ fontSize: 12 }}>Select a request</span>
+          <span style={{ fontSize: 'var(--type-heading-large)' }}>📊</span>
+          <span style={{ fontSize: 'var(--type-label)' }}>Select a request</span>
         </div>
       </div>
     );
@@ -221,7 +221,7 @@ export default function DeveloperConsole({ isOpen, onClose }) {
           }}>
             <div className="dc-panel-header" style={{ borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0' }}>
               <span>Console Settings</span>
-              <button className="dc-icon-btn" onClick={() => setShowSettings(false)} style={{ fontSize: 14 }}>✕</button>
+              <button className="dc-icon-btn" onClick={() => setShowSettings(false)} style={{ fontSize: 'var(--type-body)' }}>✕</button>
             </div>
             <SettingsPanel settings={consoleSettings} onUpdate={setConsoleSettings} />
           </div>

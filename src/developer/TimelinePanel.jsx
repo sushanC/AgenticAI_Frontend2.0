@@ -87,7 +87,7 @@ export default function TimelinePanel({ requests, selectedId, onSelect, liveEven
                   <span className="dc-timeline-time">
                     {formatTime(req.finalizedAt || req.startedAt)}
                   </span>
-                  <span style={{ fontSize: 12 }}>{intentIcon(req.intent)}</span>
+                  <span style={{ fontSize: 'var(--type-label)' }}>{intentIcon(req.intent)}</span>
                   <span className="dc-timeline-intent">
                     {req.userPrompt
                       ? req.userPrompt.slice(0, 48) + (req.userPrompt.length > 48 ? '…' : '')

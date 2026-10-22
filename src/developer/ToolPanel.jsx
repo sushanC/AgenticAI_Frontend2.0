@@ -122,7 +122,7 @@ export default function ToolPanel({ request }) {
       )}
 
       {trace.length === 0 && (
-        <div style={{ color: 'var(--text-muted)', fontSize: 12, padding: '16px 0' }}>
+        <div style={{ color: 'var(--text-muted)', fontSize: 'var(--type-label)', padding: '16px 0' }}>
           No tool execution trace captured.
         </div>
       )}

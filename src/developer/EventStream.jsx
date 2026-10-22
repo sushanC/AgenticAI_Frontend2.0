@@ -109,7 +109,7 @@ export default function EventStream({ request }) {
     return (
       <div className="dc-panel-content">
         <div className="dc-section-label">Event Stream</div>
-        <div style={{ color: 'var(--text-muted)', fontSize: 12, padding: '12px 0' }}>
+        <div style={{ color: 'var(--text-muted)', fontSize: 'var(--type-label)', padding: '12px 0' }}>
           No raw events captured for this request.
         </div>
       </div>

@@ -78,7 +78,7 @@ export default function TokenPanel({ request }) {
       )}
 
       {segments.length === 0 && (
-        <div style={{ color: 'var(--text-muted)', fontSize: 12, padding: '8px 0 16px' }}>
+        <div style={{ color: 'var(--text-muted)', fontSize: 'var(--type-label)', padding: '8px 0 16px' }}>
           Detailed token breakdown not available for this request.
         </div>
       )}

@@ -37,6 +37,7 @@ export default function Home() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [devConsoleOpen, setDevConsoleOpen] = useState(false);
   const [voiceExperienceOpen, setVoiceExperienceOpen] = useState(false);
+  const [voiceAutoStart, setVoiceAutoStart] = useState(false);
 
   const { messages, isStreaming, agentPhase, timeline, sendMessage, clearMessages, handleConfirmed, handleCancelled } = useChat();
   const { tasks }  = useTasks();
@@ -111,15 +112,32 @@ export default function Home() {
 
     // Main → Renderer: toggle voice experience overlay
     const unsubToggleVoice = desktopAPI.onToggleVoice?.(() => {
-      setVoiceExperienceOpen(prev => !prev);
+      setVoiceExperienceOpen(prev => {
+        if (prev) {
+          desktopAPI.cancelListening?.();
+          desktopAPI.stopSpeaking?.();
+          setVoiceAutoStart(false);
+          return false;
+        }
+        setVoiceAutoStart(true);
+        return true;
+      });
     }) || (() => {});
 
     // Main → Renderer: receive command palette action
     const unsubVoiceCommand = desktopAPI.onVoiceCommand?.((payload) => {
       if (payload.action === "start-conversation" || payload.action === "push-to-talk") {
+        setVoiceAutoStart(true);
         setVoiceExperienceOpen(true);
       } else if (payload.action === "stop-conversation") {
+        desktopAPI.cancelListening?.();
+        desktopAPI.stopSpeaking?.();
+        setVoiceAutoStart(false);
         setVoiceExperienceOpen(false);
+      } else if (payload.action === "mute") {
+        desktopAPI.pauseSpeaking?.();
+      } else if (payload.action === "unmute") {
+        desktopAPI.resumeSpeaking?.();
       }
     }) || (() => {});
 
@@ -182,7 +200,7 @@ export default function Home() {
             color: '#F8FAFC',
             border: '1px solid rgba(148,163,184,0.12)',
             borderRadius: '8px',
-            fontSize: '14px',
+            fontSize: 'var(--type-label)',
           },
         }}
       />
@@ -249,10 +267,8 @@ export default function Home() {
                     key={quickActionPrompt}
                     onFocusRef={registerChatInputFocus}
                     onVoiceTrigger={() => {
+                      setVoiceAutoStart(true);
                       setVoiceExperienceOpen(true);
-                      if (isElectron) {
-                        desktopAPI.toggleVoice();
-                      }
                     }}
                   />
                 </>
@@ -308,7 +324,11 @@ export default function Home() {
             exit={{ opacity: 0, y: 100 }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           >
-            <VoiceExperience onClose={() => setVoiceExperienceOpen(false)} />
+            <VoiceExperience
+              autoStart={voiceAutoStart}
+              onAutoStart={() => setVoiceAutoStart(false)}
+              onClose={() => { setVoiceAutoStart(false); setVoiceExperienceOpen(false); }}
+            />
           </motion.div>
         )}
       </AnimatePresence>

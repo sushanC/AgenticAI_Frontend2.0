@@ -25,7 +25,7 @@ export default function ModelPanel({ request }) {
     return (
       <div className="dc-panel-content">
         <div className="dc-section-label">Model Selection</div>
-        <div style={{ color: 'var(--text-muted)', fontSize: 12, padding: '16px 0' }}>
+        <div style={{ color: 'var(--text-muted)', fontSize: 'var(--type-label)', padding: '16px 0' }}>
           Model selection data not available for this request.
         </div>
 
@@ -48,7 +48,7 @@ export default function ModelPanel({ request }) {
       {reason && (
         <div className="dc-section">
           <div className="dc-section-label">Selection Reason</div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+          <div style={{ fontSize: 'var(--type-label)', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
             {reason}
           </div>
         </div>
@@ -130,7 +130,7 @@ function ModelRow({ candidate, isWinner }) {
           {candidate.name || candidate.displayName || candidate.provider || '—'}
         </span>
         {candidate.provider && candidate.name && (
-          <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{candidate.provider}</div>
+          <div style={{ fontSize: 'var(--type-caption)', color: 'var(--text-muted)' }}>{candidate.provider}</div>
         )}
       </td>
       <td>
@@ -139,12 +139,12 @@ function ModelRow({ candidate, isWinner }) {
             <span className="dc-model-score-bar">
               <span className="dc-model-score-fill" style={{ width: `${score}%` }} />
             </span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10 }}>{score}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--type-caption)' }}>{score}</span>
           </div>
         ) : '—'}
       </td>
       <td>
-        <span className={`dc-badge ${statusClass}`} style={{ fontSize: 9 }}>{statusLabel}</span>
+        <span className={`dc-badge ${statusClass}`} style={{ fontSize: 'var(--type-overline)' }}>{statusLabel}</span>
       </td>
       <td>
         <span className="dc-model-reason">

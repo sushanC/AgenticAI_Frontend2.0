@@ -1,5 +1,5 @@
 
-import { Play, Pause, Volume2, VolumeX, Square, X, MessageSquare } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Square, X, MessageSquare, RotateCcw, Mic, MicOff, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // Glass capsule control button
@@ -31,12 +31,34 @@ export default function VoiceControls({
   onCancelListening,
   onStopSpeaking,
   onToggleContinuous,
+  onRepeat,
+  hasLastResponse,
+  isMicrophoneMuted,
+  onToggleMicrophoneMute,
+  showTranscript,
+  onToggleTranscript,
 }) {
   return (
     <div className="voice-controls-container">
       <div className="voice-controls-row">
+        {hasLastResponse && (
+          <ControlCapsule
+            icon={<RotateCcw size={13} strokeWidth={2} />}
+            label="Repeat"
+            onClick={onRepeat}
+            variant="ghost"
+            ariaLabel="Repeat the last spoken response"
+          />
+        )}
+        <ControlCapsule
+          icon={showTranscript ? <EyeOff size={13} strokeWidth={2} /> : <Eye size={13} strokeWidth={2} />}
+          label={showTranscript ? 'Hide transcript' : 'Show transcript'}
+          onClick={onToggleTranscript}
+          variant="ghost"
+          ariaLabel={showTranscript ? 'Hide conversation transcript' : 'Show conversation transcript'}
+        />
         {/* Idle / Error — Start */}
-        {(status === 'idle' || status === 'error') && (
+        {(status === 'idle' || status === 'error' || status === 'interrupted') && (
           <ControlCapsule
             icon={<Play size={13} strokeWidth={2} />}
             label="Start"
@@ -49,11 +71,21 @@ export default function VoiceControls({
         {/* Listening — Cancel */}
         {status === 'listening' && (
           <ControlCapsule
+            icon={isMicrophoneMuted ? <MicOff size={13} strokeWidth={2} /> : <Mic size={13} strokeWidth={2} />}
+            label={isMicrophoneMuted ? 'Unmute mic' : 'Mute mic'}
+            onClick={onToggleMicrophoneMute}
+            variant="ghost"
+            isActive={isMicrophoneMuted}
+            ariaLabel={isMicrophoneMuted ? 'Unmute microphone' : 'Mute microphone'}
+          />
+        )}
+        {['starting', 'greeting', 'listening', 'transcribing', 'thinking', 'speaking', 'stopping'].includes(status) && (
+          <ControlCapsule
             icon={<X size={13} strokeWidth={2} />}
-            label="Cancel"
+            label={status === 'speaking' ? 'Interrupt' : 'Stop'}
             onClick={onCancelListening}
             variant="ghost"
-            ariaLabel="Cancel listening"
+            ariaLabel="Stop voice session"
           />
         )}
 

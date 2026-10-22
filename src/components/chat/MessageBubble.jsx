@@ -42,7 +42,7 @@ function CodeBlock({ children, className }) {
           margin: 0,
           borderRadius: 0,
           background: '#0B0B0B',
-          fontSize: '13px',
+          fontSize: 'var(--type-code)',
           fontFamily: 'JetBrains Mono, monospace',
           padding: '16px',
         }}

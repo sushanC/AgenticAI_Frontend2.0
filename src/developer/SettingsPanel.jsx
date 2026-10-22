@@ -60,7 +60,7 @@ export default function SettingsPanel({ settings, onUpdate }) {
 
       <div className="dc-settings-section">
         <div className="dc-settings-title">About</div>
-        <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+        <div style={{ fontSize: 'var(--type-caption)', color: 'var(--text-muted)', lineHeight: 1.6 }}>
           <div>samGPT Developer Console</div>
           <div>Developer-only observability dashboard.</div>
           <div>Events are never stored to disk.</div>

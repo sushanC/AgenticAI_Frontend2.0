@@ -33,7 +33,7 @@ function CodeBlock({ children, className }) {
           margin: 0,
           borderRadius: 0,
           background: '#090909',
-          fontSize: '13.5px',
+          fontSize: 'var(--type-label)',
           fontFamily: 'var(--font-mono)',
           padding: '16px',
           lineHeight: '1.5',

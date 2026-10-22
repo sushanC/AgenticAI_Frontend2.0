@@ -57,7 +57,7 @@ export default function RequestPanel({ request, allRequests }) {
         <div className="dc-no-selection">
           <span className="dc-no-selection-icon">👆</span>
           <span>Select a request from the timeline</span>
-          <span style={{ fontSize: 11 }}>to inspect prompt, memory, model, tokens, and events</span>
+          <span style={{ fontSize: 'var(--type-caption)' }}>to inspect prompt, memory, model, tokens, and events</span>
         </div>
       </div>
     );
@@ -86,7 +86,7 @@ export default function RequestPanel({ request, allRequests }) {
         </div>
 
         <div className="dc-request-badges">
-          <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+          <span style={{ fontSize: 'var(--type-caption)', color: 'var(--text-muted)' }}>
             {formatTime(request.finalizedAt || request.startedAt)}
           </span>
 

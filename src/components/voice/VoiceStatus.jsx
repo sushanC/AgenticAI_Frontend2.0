@@ -3,9 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const STATUS_MAP = {
   idle:       { primary: 'IDLE',       secondary: 'samGPT · VOICE CORE' },
+  starting:   { primary: 'STARTING',   secondary: 'Preparing speech services' },
+  greeting:   { primary: 'ONLINE',     secondary: 'Playing wake-up greeting' },
   listening:  { primary: 'LISTENING',  secondary: 'Receiving input' },
+  transcribing:{ primary: 'TRANSCRIBING', secondary: 'Converting speech to text' },
+  thinking:   { primary: 'THINKING',   secondary: 'Processing request' },
   processing: { primary: 'THINKING',   secondary: 'Processing request' },
   speaking:   { primary: 'SPEAKING',   secondary: 'Synthesizing response' },
+  interrupted:{ primary: 'INTERRUPTED',secondary: 'Voice session stopped' },
+  stopping:   { primary: 'STOPPING',   secondary: 'Releasing microphone and audio' },
   error:      { primary: 'ERROR',      secondary: 'State disrupted' },
 };
 

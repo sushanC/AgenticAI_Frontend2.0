@@ -34,7 +34,7 @@ export default function MemoryPanel({ request }) {
       <div className="dc-panel-content">
         <div className="dc-section-label">Memory Retrieved</div>
         <div className="dc-no-selection" style={{ height: 'auto', padding: '24px 0' }}>
-          <span style={{ fontSize: 24 }}>🧠</span>
+          <span style={{ fontSize: 'var(--type-heading-large)' }}>🧠</span>
           No memory was retrieved for this request.
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function MemoryPanel({ request }) {
                       style={{ width: `${Math.round(score * 100)}%` }}
                     />
                   </span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-muted)' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--type-caption)', color: 'var(--text-muted)' }}>
                     {score.toFixed(2)}
                   </span>
                 </div>

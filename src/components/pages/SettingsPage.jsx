@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,20 +16,15 @@ import {
   ChevronDown,
   ChevronUp,
   Check,
-  Zap,
   Volume2,
   Sliders,
   Download,
   Upload,
-  Lock,
   Sparkles,
-  Server,
   Activity,
   Radio,
   Clock,
   FlaskConical,
-  DollarSign,
-  Maximize2,
 } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -328,6 +323,7 @@ export default function SettingsPage() {
     pushToTalk: false,
     conversationMode: false,
     voiceSelection: 'en-IN-NeerjaNeural',
+    voiceGreeting: "SamGPT online. I'm listening. How can I help you?",
     speechSpeed: '+0%',
     speechPitch: '+0Hz',
     speechVolume: '+0%',
@@ -336,7 +332,7 @@ export default function SettingsPage() {
     language: 'en',
     autoListenAfterResponse: false,
     conversationTimeout: 30,
-    silenceTimeout: 2.0,
+    silenceTimeout: 1.2,
     noiseTolerance: 300,
     maxRecordingTime: 15,
     noSpeechTimeout: 5.0,
@@ -367,6 +363,7 @@ export default function SettingsPage() {
             pushToTalk: settingsRes.data.pushToTalk ?? false,
             conversationMode: settingsRes.data.conversationMode ?? false,
             voiceSelection: settingsRes.data.voiceSelection || 'en-IN-NeerjaNeural',
+            voiceGreeting: settingsRes.data.voiceGreeting || "SamGPT online. I'm listening. How can I help you?",
             speechSpeed: settingsRes.data.speechSpeed || '+0%',
             speechPitch: settingsRes.data.speechPitch || '+0Hz',
             speechVolume: settingsRes.data.speechVolume || '+0%',
@@ -375,7 +372,7 @@ export default function SettingsPage() {
             language: settingsRes.data.language || 'en',
             autoListenAfterResponse: settingsRes.data.autoListenAfterResponse ?? false,
             conversationTimeout: settingsRes.data.conversationTimeout ?? 30,
-            silenceTimeout: settingsRes.data.silenceTimeout ?? 2.0,
+            silenceTimeout: settingsRes.data.silenceTimeout ?? 1.2,
             noiseTolerance: settingsRes.data.noiseTolerance ?? 300,
             maxRecordingTime: settingsRes.data.maxRecordingTime ?? 15,
             noSpeechTimeout: settingsRes.data.noSpeechTimeout ?? 5.0,
@@ -408,10 +405,6 @@ export default function SettingsPage() {
   // ── Async health check ──────────────────────────────────────────────────
   useEffect(() => {
     if (models.length === 0) return;
-    const initial = {};
-    models.forEach(m => { initial[m.key] = 'checking'; });
-    setHealth(initial);
-
     axios.get(`${API}/models/health`)
       .then(res => setHealth(res.data || {}))
       .catch(() => {
@@ -477,7 +470,6 @@ export default function SettingsPage() {
   // Computed values
   const onlineCount = Object.values(health).filter(s => s === 'online').length;
   const enabledModels = models.filter(m => m.enabled);
-  const allModelNames = models.map(m => m.displayName).join(' · ');
 
   return (
     <div className="settings-page-layout">
@@ -689,6 +681,17 @@ export default function SettingsPage() {
                     transition={{ duration: 0.18 }}
                   >
                     <div className="form-fields-grid">
+                      <div className="field-group">
+                        <label htmlFor="voice-greeting">Wake-up greeting</label>
+                        <input
+                          id="voice-greeting"
+                          className="settings-input"
+                          type="text"
+                          maxLength={240}
+                          value={voiceSettings.voiceGreeting}
+                          onChange={e => saveVoiceSetting('voiceGreeting', e.target.value)}
+                        />
+                      </div>
                       <div className="field-group">
                         <label>Voice Selection</label>
                         <select

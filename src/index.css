@@ -28,9 +28,9 @@
 
   /* Typography */
   --text-primary: rgba(255, 255, 255, 0.94);
-  --text-secondary: rgba(255, 255, 255, 0.62);
-  --text-muted: rgba(255, 255, 255, 0.42);
-  --text-disabled: rgba(255, 255, 255, 0.24);
+  --text-secondary: rgba(255, 255, 255, 0.72);
+  --text-muted: rgba(255, 255, 255, 0.56);
+  --text-disabled: rgba(255, 255, 255, 0.38);
 
   /* Accent and semantic states */
   --accent: #b8c2d2;
@@ -70,8 +70,28 @@
 
   --font-sans: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", "SF Mono", SFMono-Regular, Consolas, monospace;
-  --sidebar-w: 260px;
+  --sidebar-w: 264px;
   --chat-max-w: 820px;
+
+  /* App typography scale: 1rem follows browser/Electron text-size preferences. */
+  --type-body: 0.9375rem;
+  --type-label: 0.75rem;
+  --type-navigation: 0.8125rem;
+  --type-card-title: 0.9375rem;
+  --type-heading: 1.125rem;
+  --type-heading-large: 1.75rem;
+  --type-display: 2rem;
+  --type-hero: 2.125rem;
+  --type-overline: 0.59375rem;
+  --type-caption: 0.71875rem;
+  --type-placeholder: 0.875rem;
+  --type-code: 0.8125rem;
+
+  /* Shared controls retain comfortable hit areas at common desktop scale. */
+  --control-height: 44px;
+  --control-height-compact: 40px;
+  --icon-size: 20px;
+  --icon-size-small: 18px;
 
   /* Existing aliases: retained while page components migrate to the new names. */
   --bg-window: var(--bg-app);
@@ -162,6 +182,7 @@ body,
 
 html {
   background: var(--bg-app);
+  font-size: 120%;
 }
 
 body {
@@ -169,7 +190,7 @@ body {
   background: var(--bg-app);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 15px;
+  font-size: var(--type-body);
   line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

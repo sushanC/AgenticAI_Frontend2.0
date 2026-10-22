@@ -45,7 +45,7 @@ export default function ChatWindow({
           style={{
             color: "#F8FAFC",
             margin: 0,
-            fontSize: "28px"
+            fontSize: "var(--type-heading-large)"
           }}
         >
           Personal Agent
