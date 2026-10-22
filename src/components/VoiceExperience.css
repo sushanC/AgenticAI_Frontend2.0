@@ -377,6 +377,16 @@
   font-size: 0.8125rem;
 }
 
+.voice-error-message p {
+  margin: 4px 0 0;
+}
+
+.voice-error-code {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    CONVERSATION — Ghost Glass Panel
    ═══════════════════════════════════════════════════════════════════════════ */

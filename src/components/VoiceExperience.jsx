@@ -36,7 +36,13 @@ const VOICE_ERRORS = {
   AUDIO_OUTPUT_UNAVAILABLE: 'The selected audio output device is unavailable. Choose an active speaker and retry.',
   AUDIO_PLAYBACK_FAILED: 'Audio playback failed. Check ffplay and the selected output device.',
   MICROPHONE_FAILED: 'Microphone capture failed. Check Linux microphone permissions, the selected ALSA input, and that arecord is installed.',
+  AUDIO_CAPTURE_FAILED: 'The microphone recording could not be saved. Check microphone access, available disk space, and the selected input device, then retry.',
+  AUDIO_FILE_UNAVAILABLE: 'Whisper could not access the temporary recording. Check local disk access and retry.',
+  AUDIO_TOO_SHORT: 'The microphone recording was too short to transcribe. Check the microphone, speak after the Listening indicator appears, and try a longer phrase.',
+  NO_SPEECH_DETECTED: 'No speech was detected. Check that the correct microphone is selected and unmuted, then speak clearly after Listening appears.',
+  TRANSCRIPTION_EMPTY: 'Audio was captured but Whisper returned no words. Check microphone level and language settings, then retry with a clear, longer phrase.',
   TRANSCRIPTION_FAILED: 'Speech could not be transcribed. Check the Whisper model and Python environment.',
+  WHISPER_MODEL_UNAVAILABLE: 'The local Whisper model could not start. Check the backend Python environment, installed Faster Whisper package, available model files, and memory, then retry.',
   REQUEST_FAILED: 'SamGPT could not complete the voice request. Try again or use text chat.',
   TTS_FAILED: 'The response could not be synthesized. Check Edge TTS and network access.',
 };
@@ -53,6 +59,7 @@ export default function VoiceExperience({ onClose, autoStart = false, onAutoStar
   const [showTranscript, setShowTranscript] = useState(true);
   const [modelName, setModelName] = useState('Auto');
   const [errorMessage, setErrorMessage] = useState('');
+  const [errorCode, setErrorCode] = useState('');
   const autoStartSent = useRef(false);
   const displayStatus = autoStart && status === 'idle'
     ? (isElectron ? 'starting' : 'error')
@@ -182,8 +189,19 @@ export default function VoiceExperience({ onClose, autoStart = false, onAutoStar
       setStatus(state);
       if (state === 'starting') onAutoStart();
       if (state === 'idle' || state === 'starting') setIsMicrophoneMuted(false);
-      if (state === 'error') setErrorMessage(VOICE_ERRORS[payload.error] || 'Voice session failed. Check microphone and speech service settings, then try again.');
-      else if (state === 'starting') setErrorMessage('');
+      if (state === 'error') {
+        const safeCode = typeof payload.error === 'string' && /^[A-Z0-9_-]{1,64}$/.test(payload.error)
+          ? payload.error
+          : 'VOICE_SESSION_FAILED';
+        setErrorCode(safeCode);
+        const guidance = VOICE_ERRORS[safeCode]
+          || (safeCode.startsWith('EDGE_TTS_HTTP_') ? 'Edge TTS rejected the request. Check service availability and network access, then retry.' : null)
+          || 'Voice session failed. Check microphone and speech service settings, then try again.';
+        setErrorMessage(guidance);
+      } else if (state === 'starting') {
+        setErrorCode('');
+        setErrorMessage('');
+      }
 
       if (state === 'speaking') {
         setIsPaused(false);
@@ -240,7 +258,12 @@ export default function VoiceExperience({ onClose, autoStart = false, onAutoStar
 
           {/* Status Display */}
           <VoiceStatus status={displayStatus} />
-          {displayStatus === 'error' && <p className="voice-error-message" role="alert">{displayErrorMessage}</p>}
+          {displayStatus === 'error' && (
+            <div className="voice-error-message" role="alert">
+              {errorCode && <strong className="voice-error-code">{errorCode}</strong>}
+              <p>{displayErrorMessage}</p>
+            </div>
+          )}
 
           {/* Fluid Waveform */}
           <VoiceWaveform status={displayStatus} />
